@@ -8,5 +8,5 @@ import (
 )
 
 func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
-	
+
 }
