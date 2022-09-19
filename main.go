@@ -11,11 +11,17 @@ import (
 )
 
 func main() {
+	e := echo.New()
 	cfg := config.GetConfig()
 	db := mysql.InitDB(cfg)
 
-	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", cfg.SERVER_PORT)))
+	routes.InitRoutes(e, db, cfg)
+
+	err := e.Start(":" + cfg.SERVER_PORT)
+
+	if err != nil {
+		panic(err)
+	}
 }

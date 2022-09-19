@@ -5,6 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitRoutes(e echo.Echo, dbgorm.DB, cfg *config.AppConfig) {
+func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 }
