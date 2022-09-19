@@ -32,10 +32,6 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
-
-	// if err := godotenv.Load(".env"); err != nil {
-	// 	log.Fatal(err)
-	// }
 	serverPortConv, errConv := strconv.Atoi(os.Getenv("SERVER_PORT"))
 	if errConv != nil {
 		log.Fatal("error parse DB PORT")
