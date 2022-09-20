@@ -21,14 +21,14 @@ type Core struct {
 }
 
 type UsecaseInterface interface {
-	// PostData(data Core) (int, error)
+	PostMentee(data Core) (int, error)
 	// GetByToken(token int) (data Core, err error)
 	// PutData(newData Core) (row int, err error)
 	// DeleteData(token int) (int, error)
 }
 
 type DataInterface interface {
-	// InsertData(data Core) (int, error)
+	AddMentee(data Core) (int, error)
 	// SelectByToken(token int) (data Core, err error)
 	// UpdateData(newData Core) (row int, err error)
 	// DeleteByToken(token int) (int, error)

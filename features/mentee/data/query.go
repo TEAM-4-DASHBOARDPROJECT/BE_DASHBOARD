@@ -15,3 +15,12 @@ func New(db *gorm.DB) mentee.DataInterface {
 		db: db,
 	}
 }
+
+func (repo *menteeData) AddMentee(data mentee.Core) (int, error) {
+	dataModel := fromCore(data)
+	tx := repo.db.Create(&dataModel)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return int(tx.RowsAffected), nil
+}
