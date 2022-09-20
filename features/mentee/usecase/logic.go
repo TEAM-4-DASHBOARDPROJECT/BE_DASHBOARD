@@ -21,3 +21,11 @@ func (usecase *menteeUsecase) PostMentee(data mentee.Core) (int, error) {
 	}
 	return row, nil
 }
+
+func (usecase *menteeUsecase) PutMentee(id int, newData mentee.Core) (int, error) {
+	row, err := usecase.menteeData.UpdateMentee(id, newData)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
+}

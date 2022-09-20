@@ -24,3 +24,12 @@ func (repo *menteeData) AddMentee(data mentee.Core) (int, error) {
 	}
 	return int(tx.RowsAffected), nil
 }
+
+func (repo *menteeData) UpdateMentee(id int, newData mentee.Core) (int, error) {
+	dataModel := fromCore(newData)
+	tx := repo.db.Model(&Mentee{}).Where("id = ?", id).Updates(dataModel)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return 1, nil
+}

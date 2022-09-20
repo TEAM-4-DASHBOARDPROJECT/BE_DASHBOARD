@@ -4,6 +4,7 @@ import (
 	"immersiveProject/features/mentee"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,6 +19,7 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 	}
 
 	e.POST("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
+	e.PUT("/mentee/{:id}", handler.PostMentee, middlewares.JWTMiddleware())
 
 }
 
@@ -50,4 +52,27 @@ func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
 
 	return c.JSON(201, helper.SuccessResponseHelper("success insert data"))
 
+}
+
+func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
+	}
+
+	var dataUpdate MenteeRequest
+	errBind := c.Bind(&dataUpdate)
+	if errBind != nil {
+		return c.JSON(400, helper.FailedResponseHelper("error bind data"))
+	}
+
+	row, err := delivery.menteeUsecase.PutMentee(id, toCore(dataUpdate))
+	if err != nil {
+		return c.JSON(500, helper.FailedResponseHelper("error update data"))
+	}
+	if row != 1 {
+		return c.JSON(500, helper.FailedResponseHelper("error update data"))
+	}
+
+	return c.JSON(201, helper.SuccessResponseHelper("success update data"))
 }
