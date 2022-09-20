@@ -16,7 +16,7 @@ func New(repo entity.UserInterface) *loginUsecase {
 	}
 }
 
-func (login *loginUsecase) LoginUser(userData entity.Login) (token string, err error){
+func (login *loginUsecase) Login(userData entity.Login) (token string, err error){
 	result, err := login.repo.SelectUserByEmail(userData.Email)
 
 	if err != nil {

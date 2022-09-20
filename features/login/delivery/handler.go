@@ -17,7 +17,7 @@ func New(usecase entity.UsecaseLogin) *loginHandler {
 	}
 }
 
-func (repo *loginHandler) login(c echo.Context)error {
+func (repo *loginHandler) Login(c echo.Context)error {
 	loginRequest := loginRequest{}
 	c.Bind(&loginRequest)
 
