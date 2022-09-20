@@ -7,6 +7,6 @@ WORKDIR /app
 COPY . .
 
 RUN go mod tidy
-RUN go build -o dashboard-app
+RUN go build -o BE_DASHBOARD
 
-CMD ["./dashboard-app"]
+CMD ["./BE_DASHBOARD"]
