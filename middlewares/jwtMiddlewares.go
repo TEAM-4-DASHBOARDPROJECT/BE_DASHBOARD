@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"immersiveProject/config"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ func CreateToken(userId int) (string, error) {
 	return token.SignedString([]byte(config.SECRET_JWT))
 }
 
-func ExtractToken(c echo.Context) int {
+func ExtractToken(c echo.Context) (int, error) {
 	headerData := c.Request().Header.Get("Authorization")
 	dataAuth := strings.Split(headerData, " ")
 	token := dataAuth[len(dataAuth)-1]
@@ -37,8 +38,8 @@ func ExtractToken(c echo.Context) int {
 	if datajwt.Valid {
 		claims := datajwt.Claims.(jwt.MapClaims)
 		userId := claims["userId"].(float64)
-		return int(userId)
+		return int(userId),nil
 	}
 
-	return -1
+	return -1, fmt.Errorf("token invalid")
 }
