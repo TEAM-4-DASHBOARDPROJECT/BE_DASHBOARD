@@ -29,5 +29,5 @@ func (repo *loginHandler) Login(c echo.Context)error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper(err.Error()))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Login succses", token))
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Login succses",token))
 }
