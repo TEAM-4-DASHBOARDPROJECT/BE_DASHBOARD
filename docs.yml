@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Dashboard Immersive Project
   version: 1.0.0
-  description: This is a sample server for a pet store.
+  description: Dashboard Immersive Project
   termsOfService: https://example.com/terms/
   contact:
     name: API Support
@@ -19,7 +19,7 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/DianNurdiana-alt/Dashboard-Immersive/1.0.0
   - url: http://0.0.0.0:5000
-    description: server https
+  
     variables:
       environment: 
         default: dev
@@ -102,6 +102,7 @@ paths:
             example:
               fullname: "John"
               email: "john@gmail.com"
+              password: "john123"
               team: "admission"
               role: "admin"
               status: "active"
@@ -112,18 +113,19 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: '#/components/responses/createDataSuccess'
+                $ref: '#/components/responses/addUserSuccess'
               example:
                 message: "Success add user"
                 data:
                   id: 2
                   fullname: "John"
                   email: "john@gmail.com"
+                  password: "john123"
                   team: "admission"
                   role: "admin"
                   status: "active"
         400:
-          $ref: '#/components/responses/createDataFailed'
+          $ref: '#/components/responses/addUserFailed'
     get:
       tags:
         - User
@@ -383,6 +385,9 @@ paths:
               $ref: '#/components/schemas/requestClass'
             example:
               name: "Back End Engineer Batch 11"
+              total: 23
+              start class: 10 July 2022
+              end class: 20 October 2022
       responses:
         200:
           description: "Success"
@@ -396,6 +401,9 @@ paths:
                 data:
                   id: 2
                   name: "Back End Engineer Batch 11"
+                  total: 23
+                  awal kelas: 10 July 2022
+                  akhir kelas: 20 October 2022
         400:
           $ref: '#/components/responses/createClassFailed'
     get:
@@ -498,23 +506,14 @@ components:
           type: string
         email:
           type: string
+        password:
+          type: string
         team:
           type: string
-          enum:
-            - academic
-            - addmission
-            - people
-            - placement
         role:
           type: string
-          enum:
-            - superadmin
-            - user
         status:
-          type: string
-          enum:
-            - active
-            - non-active   
+          type: string   
     requestMentee:
       type: object
       properties:
@@ -592,6 +591,12 @@ components:
       properties:
         name:
           type: string
+        total:
+          type: integer
+        start class:
+          type: string
+        end class:
+          type: string
         
     
 ########## RESPONSES ##########
@@ -648,7 +653,63 @@ components:
               message:
                 type: string
                 example: error get data user
+
+# RESPONSES ADD USER
+    addUserSuccess:
+      description: succes insert data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success insert data user
+              data:
+                type: object
+                properties:
+                  fullname:
+                    type: string
+                    example: John
+                  email:
+                    type: string
+                    example: john@gmail.com
+                  password:
+                    type: string
+                    example: john123
+                  team:
+                    type: string
+                    example: people
+                  role:
+                    type: string
+                    example: default
+                  status:
+                    type: string
+                    example: active
+    addUserFailed:
+      description: error insert data user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: error insert data user
           
+
 # RESPONSES ADD DATA
     createDataSuccess:
       description: success insert data

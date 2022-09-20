@@ -5,11 +5,11 @@ import "immersiveProject/features/mentee"
 type MenteeResponse struct {
 	ID                int    `json:"id"`
 	FullName          string `json:"fullname"`
-	Status            string `json:"status`
-	Class             string `json:"class`
-	Category          string `json:"category`
-	Address           string `json:"address,omitempty`
-	HomeAddress       string `json:"homeaddress,omitempty`
+	Status            string `json:"status"`
+	Class             string `json:"class"`
+	Category          string `json:"category"`
+	Address           string `json:"address,omitempty"`
+	HomeAddress       string `json:"homeaddress,omitempty"`
 	Email             string `json:"email,omitempty"`
 	Gender            string `json:"gender"`
 	Telegram          string `json:"telegram,omitempty"`
