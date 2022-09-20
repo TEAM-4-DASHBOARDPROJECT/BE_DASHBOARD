@@ -19,10 +19,10 @@ func New(usecase entity.UsecaseLogin) *loginHandler {
 
 func (repo *loginHandler) Login(c echo.Context)error {
 	loginRequest := loginRequest{}
-	c.Bind(&loginRequest)
+	errBind := c.Bind(&loginRequest)
 
-	if err := c.Validate(loginRequest); err != nil{
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+	if errBind != nil{
+		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(errBind.Error()))
 	}
 	loginEntity := ToEntity(loginRequest)
 	token, err := repo.Usecase.Login(loginEntity)
