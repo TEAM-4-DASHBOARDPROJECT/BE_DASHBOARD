@@ -32,11 +32,6 @@ func (repo *classhandler) Create(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
 	}
-
-	if err := c.Validate(userRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-
 	userEntity := RequestToEntity(userRequest)
 	userEntity.UserID = uint(id)
 
@@ -64,10 +59,6 @@ func (repo *classhandler) Update(c echo.Context) error {
 
 	err = c.Bind(&userRequest)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-
-	if err := c.Validate(userRequest); err != nil{
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
 	}
 
