@@ -80,3 +80,28 @@ func (repo *classhandler) Update(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, helper.FailedResponseHelper("Succses update class"))
 }
+
+func (repo *classhandler) Delete(c echo.Context) error{
+	var classId int
+
+	id, err := middlewares.ExtractToken(c)
+	if err != nil{
+		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+	}
+
+	classId, err = strconv.Atoi(c.Param("id"))
+	if err != nil{
+		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+	}
+
+	userEntity := entity.ClassEntity{}
+	userEntity.UserID = uint(id)
+	userEntity.ClassID = uint(classId)
+
+	err = repo.Usecase.Delete(userEntity)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("succses delete class"))
+}
