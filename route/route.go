@@ -11,6 +11,10 @@ import (
 	loginrepo "immersiveProject/features/login/repository"
 	loginusecase "immersiveProject/features/login/usecase"
 
+	userData "immersiveProject/features/users/data"
+	userDelivery "immersiveProject/features/users/delivery"
+	userUsecase "immersiveProject/features/users/usecase"
+
 	classhandler "immersiveProject/features/class/delivery"
 	classrepo "immersiveProject/features/class/repository"
 	classusecase "immersiveProject/features/class/usecase"
@@ -20,6 +24,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	loginRepo := loginrepo.New(db)
 	loginUsecase := loginusecase.New(loginRepo)
 	loginHandler := loginhandler.New(loginUsecase)
+
+	userData := userData.New(db)
+	userUsecaseFactory := userUsecase.New(userData)
+	userDelivery.New(e, userUsecaseFactory)
 
 	classRepo := classrepo.New(db)
 	classUsecase := classusecase.New(classRepo)
@@ -34,4 +42,5 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	e.POST("/class", classHandler.Create, middlewares.JWTMiddleware())
 	e.PUT("/class", classHandler.Update, middlewares.JWTMiddleware())
 	e.DELETE("/class", classHandler.Delete, middlewares.JWTMiddleware())
+
 }
