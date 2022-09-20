@@ -18,7 +18,7 @@ servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/DianNurdiana-alt/Dashboard-Immersive/1.0.0
-  - url: https://{environment}.api.server.com
+  - url: http://0.0.0.0:5000
     description: server https
     variables:
       environment: 
