@@ -7,6 +7,7 @@ func FailedResponseHelper(msg string) map[string]interface{} {
 	}
 }
 
+
 func SuccessResponseHelper(msg string) map[string]interface{} {
 	return map[string]interface{}{
 		"status":  "success",
