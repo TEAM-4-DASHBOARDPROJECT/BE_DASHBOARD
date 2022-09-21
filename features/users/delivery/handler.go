@@ -19,6 +19,7 @@ func New(e *echo.Echo, data users.UsecaseInterface) {
 	}
 
 	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
+	e.GET("/users/me", handler.MyProfile, middlewares.JWTMiddleware())
 	e.PUT("/users", handler.PutDataUser, middlewares.JWTMiddleware())
 	e.DELETE("/manager/:id", handler.DeleteDataUser, middlewares.JWTMiddleware())
 	e.POST("/manager", handler.PostDataUser) //<<=== Sementara tidak pakai token dulu
@@ -32,7 +33,7 @@ func (delivery *userDelivery) GetAllUser(c echo.Context) error {
 		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
 	}
 
-	idToken,_ := middlewares.ExtractToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
 
 	data, errGet := delivery.userUsecase.GetAll(page, idToken)
 	if errGet != nil {
@@ -44,9 +45,21 @@ func (delivery *userDelivery) GetAllUser(c echo.Context) error {
 	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", toResponList(data)))
 }
 
+func (delivery *userDelivery) MyProfile(c echo.Context) error {
+
+	idToken, _ := middlewares.ExtractToken(c)
+
+	data, err := delivery.userUsecase.SelectMe(idToken)
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("failed get my profile"))
+	}
+
+	return c.JSON(200, helper.SuccessDataResponseHelper("get profile success", toRespon(data)))
+}
+
 func (delivery *userDelivery) PutDataUser(c echo.Context) error {
 
-	idToken,_ := middlewares.ExtractToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
 
 	var updateRequest Request
 	err := c.Bind(&updateRequest)
@@ -88,9 +101,9 @@ func (delivery *userDelivery) PutDataUser(c echo.Context) error {
 
 func (delivery *userDelivery) DeleteDataUser(c echo.Context) error {
 
-	idToken,_ := middlewares.ExtractToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
 	if idToken != 1 {
-		return c.JSON(400, helper.FailedResponseHelper("not have access"))
+		return c.JSON(400, helper.FailedResponseHelper("you not have access"))
 	}
 
 	param := c.Param("id")

@@ -4,8 +4,8 @@ import "immersiveProject/features/mentee"
 
 type MenteeRequest struct {
 	FullName          string `json:"name" form:"name"`
-	Status            string `json:"status" form:"status"`
-	Class             string `json:"class" form:"class"`
+	StatusID          uint   `json:"status_id" form:"status_id"`
+	ClassID           uint   `json:"class_id" form:"class_id"`
 	Category          string `json:"category" form:"category"`
 	Address           string `json:"address" form:"address"`
 	HomeAddress       string `json:"homeaddress" form:"homeaddress"`
@@ -24,20 +24,20 @@ type MenteeRequest struct {
 func toCore(data MenteeRequest) mentee.Core {
 	return mentee.Core{
 		FullName:          data.FullName,
-		Status:            data.FullName,
-		Class:             data.FullName,
-		Category:          data.FullName,
-		Address:           data.FullName,
-		HomeAddress:       data.FullName,
-		Email:             data.FullName,
-		Gender:            data.FullName,
-		Telegram:          data.FullName,
-		Phone:             data.FullName,
-		EmergencyName:     data.FullName,
-		EmergencyPhone:    data.FullName,
-		EmergencyStatus:   data.FullName,
-		EducationType:     data.FullName,
-		EducationMajor:    data.FullName,
-		EducationGraduate: data.FullName,
+		StatusID:          data.StatusID,
+		ClassID:           data.ClassID,
+		Category:          data.Category,
+		Address:           data.Address,
+		HomeAddress:       data.HomeAddress,
+		Email:             data.Email,
+		Gender:            data.Gender,
+		Telegram:          data.Telegram,
+		Phone:             data.Phone,
+		EmergencyName:     data.EmergencyName,
+		EmergencyPhone:    data.EmergencyPhone,
+		EmergencyStatus:   data.EmergencyStatus,
+		EducationType:     data.EducationType,
+		EducationMajor:    data.EducationMajor,
+		EducationGraduate: data.EducationGraduate,
 	}
 }

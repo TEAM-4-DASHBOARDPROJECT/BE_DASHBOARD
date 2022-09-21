@@ -9,8 +9,8 @@ import (
 type Mentee struct {
 	gorm.Model
 	FullName          string
-	Status            string
-	Class             string
+	StatusID          uint
+	ClassID           uint
 	Category          string
 	Address           string
 	HomeAddress       string
@@ -26,11 +26,23 @@ type Mentee struct {
 	EducationGraduate string
 }
 
+type Status struct {
+	gorm.Model
+	Name   string
+	Mentee []Mentee
+}
+
+type Class struct {
+	gorm.Model
+	Name   string
+	Mentee []Mentee
+}
+
 func fromCore(data mentee.Core) Mentee {
 	dataModel := Mentee{
 		FullName:          data.FullName,
-		Status:            data.Status,
-		Class:             data.Class,
+		StatusID:          data.StatusID,
+		ClassID:           data.ClassID,
 		Category:          data.Category,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
@@ -51,8 +63,8 @@ func fromCore(data mentee.Core) Mentee {
 func (data *Mentee) toCore() mentee.Core {
 	return mentee.Core{
 		FullName:          data.FullName,
-		Status:            data.Status,
-		Class:             data.Class,
+		StatusID:          data.StatusID,
+		ClassID:           data.ClassID,
 		Category:          data.Category,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
@@ -67,4 +79,12 @@ func (data *Mentee) toCore() mentee.Core {
 		EducationMajor:    data.EducationMajor,
 		EducationGraduate: data.EducationGraduate,
 	}
+}
+
+func toCoreList(data []Mentee) []mentee.Core {
+	var dataCore []mentee.Core
+	for key := range data {
+		dataCore = append(dataCore, data[key].toCore())
+	}
+	return dataCore
 }
