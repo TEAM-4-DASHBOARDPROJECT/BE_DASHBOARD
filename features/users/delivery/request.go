@@ -9,6 +9,7 @@ type Request struct {
 	Password string `json:"password" form:"password"`
 	Team     string `json:"team" form:"team"`
 	Role     string `json:"role" form:"role"`
+	Status   string `json:"status" form:"status"`
 }
 
 func (req *Request) toCoreReq() users.Core {
@@ -18,5 +19,6 @@ func (req *Request) toCoreReq() users.Core {
 		Password: req.Password,
 		Team:     req.Team,
 		Role:     req.Role,
+		Status:   req.Status,
 	}
 }
