@@ -55,6 +55,7 @@ func fromCore(data mentee.Core) Mentee {
 
 func (data *Mentee) toCore() mentee.Core {
 	return mentee.Core{
+		ID:                data.ID,
 		FullName:          data.FullName,
 		Status:            data.Status,
 		Address:           data.Address,
