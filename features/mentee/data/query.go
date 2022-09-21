@@ -74,7 +74,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 
 func (repo *menteeData) DeleteData(id int) (int, error) {
 	var deleteData Mentee
-	tx := repo.db.First(&deleteData, id)
+	tx := repo.db.Where("id = ?", id).Delete(&deleteData)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
