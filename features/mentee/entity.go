@@ -3,8 +3,7 @@ package mentee
 type Core struct {
 	ID                uint
 	FullName          string
-	StatusID          uint
-	ClassID           uint
+	Status            string
 	Address           string
 	HomeAddress       string
 	Email             string
@@ -17,11 +16,6 @@ type Core struct {
 	EducationCategory string
 	EducationMajor    string
 	EducationGraduate string
-}
-
-type Status struct {
-	ID   uint
-	Name string
 }
 
 type Class struct {

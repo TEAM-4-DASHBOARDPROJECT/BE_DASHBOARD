@@ -9,8 +9,7 @@ import (
 type Mentee struct {
 	gorm.Model
 	FullName          string
-	StatusID          uint
-	ClassID           uint
+	Status            string
 	Address           string
 	HomeAddress       string
 	Email             string `gorm:"unique"`
@@ -24,13 +23,6 @@ type Mentee struct {
 	EducationMajor    string
 	EducationGraduate string
 	Class             Class
-	Status            Status
-}
-
-type Status struct {
-	gorm.Model
-	Name   string
-	Mentee []Mentee
 }
 
 type Class struct {
@@ -42,8 +34,7 @@ type Class struct {
 func fromCore(data mentee.Core) Mentee {
 	dataModel := Mentee{
 		FullName:          data.FullName,
-		StatusID:          data.StatusID,
-		ClassID:           data.ClassID,
+		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,
@@ -63,8 +54,7 @@ func fromCore(data mentee.Core) Mentee {
 func (data *Mentee) toCore() mentee.Core {
 	return mentee.Core{
 		FullName:          data.FullName,
-		StatusID:          data.StatusID,
-		ClassID:           data.ClassID,
+		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,

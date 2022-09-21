@@ -7,8 +7,7 @@ import (
 type MenteeResponse struct {
 	ID                uint   `json:"id"`
 	FullName          string `json:"fullname"`
-	StatusID          uint   `json:"status_id"`
-	ClassID           uint   `json:"class_id"`
+	Status            string `json:"status"`
 	Address           string `json:"address,omitempty"`
 	HomeAddress       string `json:"homeaddress,omitempty"`
 	Email             string `json:"email,omitempty"`
@@ -27,8 +26,7 @@ func fromCore(data mentee.Core) MenteeResponse {
 	return MenteeResponse{
 		ID:                data.ID,
 		FullName:          data.FullName,
-		StatusID:          data.StatusID,
-		ClassID:           data.ClassID,
+		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,
@@ -50,8 +48,7 @@ func fromCoreList(data []mentee.Core) []MenteeResponse {
 		dataRes = append(dataRes, MenteeResponse{
 			ID:                v.ID,
 			FullName:          v.FullName,
-			StatusID:          v.StatusID,
-			ClassID:           v.ClassID,
+			Status:            v.Status,
 			Address:           v.Address,
 			HomeAddress:       v.HomeAddress,
 			Email:             v.Email,
