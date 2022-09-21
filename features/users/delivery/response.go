@@ -9,6 +9,7 @@ type Response struct {
 	Password string `json:"password"`
 	Team     string `json:"team"`
 	Role     string `json:"role"`
+	Status   string `json:"status"`
 }
 
 func toRespon(data users.Core) Response {
@@ -19,6 +20,7 @@ func toRespon(data users.Core) Response {
 		Password: data.Password,
 		Team:     data.Team,
 		Role:     data.Role,
+		Status:   data.Status,
 	}
 }
 
