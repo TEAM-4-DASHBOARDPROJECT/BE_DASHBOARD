@@ -3,8 +3,9 @@ package mysql
 import (
 	"fmt"
 	"immersiveProject/config"
-	_userModel "immersiveProject/features/users/data"
 	classModel "immersiveProject/features/class/data"
+	menteeModel "immersiveProject/features/mentee/data"
+	_userModel "immersiveProject/features/users/data"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -27,5 +28,7 @@ func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		new(_userModel.User),
 		new(classModel.Class),
+		new(menteeModel.Status),
+		new(menteeModel.Mentee),
 	)
 }

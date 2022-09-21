@@ -5,7 +5,6 @@ type Core struct {
 	FullName          string
 	StatusID          uint
 	ClassID           uint
-	Category          string
 	Address           string
 	HomeAddress       string
 	Email             string
@@ -15,7 +14,7 @@ type Core struct {
 	EmergencyName     string
 	EmergencyPhone    string
 	EmergencyStatus   string
-	EducationType     string
+	EducationCategory string
 	EducationMajor    string
 	EducationGraduate string
 }
@@ -32,14 +31,14 @@ type Class struct {
 
 type UsecaseInterface interface {
 	PostMentee(data Core) (int, error)
-	GetMentee(classID int, statusID int, category string) (data []Core, err error)
+	GetMentee(class string, status string, category string) (data []Core, err error)
 	PutMentee(id int, newData Core) (row int, err error)
 	DeleteMentee(id int) (int, error)
 }
 
 type DataInterface interface {
 	AddMentee(data Core) (int, error)
-	SelectMentee(classID int, statusID int, category string) (data []Core, err error)
+	SelectMentee(class string, status string, category string) (data []Core, err error)
 	UpdateMentee(id int, newData Core) (row int, err error)
 	DeleteData(id int) (int, error)
 }
