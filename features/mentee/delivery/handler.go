@@ -19,9 +19,9 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 	}
 
 	e.POST("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
-	e.PUT("/mentee/:id", handler.PostMentee, middlewares.JWTMiddleware())
-	e.GET("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
-	e.DELETE("/mentee/:id", handler.PostMentee, middlewares.JWTMiddleware())
+	e.PUT("/mentee/:id", handler.PutMentee, middlewares.JWTMiddleware())
+	e.GET("/mentee", handler.GetMentee, middlewares.JWTMiddleware())
+	e.DELETE("/mentee/:id", handler.DeleteMentee, middlewares.JWTMiddleware())
 
 }
 
