@@ -16,17 +16,35 @@ func New(db *gorm.DB) users.DataInterface {
 		db: db,
 	}
 }
+func (repo *dataUser) GetMyProfile(token int) (users.Core, error) {
+
+	var data User
+	tx := repo.db.First(&data, token)
+	if tx.Error != nil {
+		return users.Core{}, tx.Error
+	}
+
+	return data.toCore(), nil
+}
 
 func (repo *dataUser) SelectAll(page, token int) ([]users.Core, error) {
 
 	limit := 5
 	offset := ((page - 1) * limit)
-	queryBuider := repo.db.Limit(limit).Offset(offset)
+	queryParam := repo.db.Limit(limit).Offset(offset)
 
 	var data []User
-	tx := queryBuider.Find(&data).Order("name ASC")
-	if tx.Error != nil {
-		return nil, tx.Error
+
+	if page > 0 {
+		txA := queryParam.Find(&data).Order("name ASC")
+		if txA.Error != nil {
+			return nil, txA.Error
+		}
+	} else {
+		txB := repo.db.Find(&data).Order("name ASC")
+		if txB.Error != nil {
+			return nil, txB.Error
+		}
 	}
 
 	for _, v := range data {
@@ -35,7 +53,7 @@ func (repo *dataUser) SelectAll(page, token int) ([]users.Core, error) {
 		}
 	}
 
-	return nil, errors.New("not have access")
+	return nil, errors.New("you not have access")
 }
 
 func (repo *dataUser) UpdateData(data users.Core) int {
