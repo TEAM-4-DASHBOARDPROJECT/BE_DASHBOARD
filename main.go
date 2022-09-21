@@ -12,15 +12,10 @@ import (
 )
 
 func main() {
-	e := echo.New()
 	cfg := config.GetConfig()
 	db := mysql.InitDB(cfg)
-
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
-		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.OPTIONS},
-	}))
+	e := echo.New()
+	e.Pre(middleware.RemoveTrailingSlash())
 
 	route.InitRoutes(e, db, cfg)
 

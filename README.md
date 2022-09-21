@@ -3,7 +3,6 @@
 ## Required Stuff
 
 - Docker
-- Docker Compose
 
 ## Required Step
 Copy .env_example and rename to .env

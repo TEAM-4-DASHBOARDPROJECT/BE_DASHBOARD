@@ -15,7 +15,7 @@ func New(db *gorm.DB) *loginRepo {
 	}
 }
 
-func (repo *loginRepo) SelectUserByEmail (email string) (login entity.Login, err error) {
+func (repo *loginRepo) SelectUserByEmail(email string) (login entity.Login, err error) {
 	userModel := model.User{}
 	tx := repo.db.Where("email = ?", email).First(&userModel)
 	err = tx.Error
