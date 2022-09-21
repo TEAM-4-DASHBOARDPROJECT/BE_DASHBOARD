@@ -20,26 +20,8 @@ jobs:
           script: |
             cd /home/ubuntu/BE_DASHBOARD
             git pull origin main
-            docker stop projectcon
-            docker rm projectcon
-            docker rmi project
-            docker build -t project:latest .
-            docker run -d -p 8090:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name projectcon project:latest
-            
-
-            
-
-
-# CTRL + / KALO DAH SIAP DEPLOY
-            # docker compose down
-            # docker rmi dashboardproject
-            # docker compose up -d
-            # export DB_NAME=${{ secrets.DB_NAME }}
-            # export DB_HOST=${{ secrets.DB_HOST }}
-            # export DB_PORT=${{ secrets.DB_PORT }}
-            # export DB_USER=${{ secrets.DB_USER }}
-            # export DB_PASS=${{ secrets.DB_PASSWORD }}
-            # export SERVER_PORT=${{ secrets.SERVER_PORT }}
-            # export JWT_SECRET=${{ secrets.JWT_SECRET }}
-            # export BASE_URL=${{ secrets.BASE_URL}}
-            # go mod tidy
+            docker stop dashboardproject
+            docker rm dashboardproject
+            docker rmi dashboardproject
+            docker build -t dashboardproject:latest .
+            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name dashboardproject dashboardproject:latest

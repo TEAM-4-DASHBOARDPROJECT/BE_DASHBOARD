@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"immersiveProject/config"
 	_userModel "immersiveProject/features/users/data"
+	classModel "immersiveProject/features/class/data"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -24,7 +25,7 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 
 func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
-	//
+		new(_userModel.User),
+		new(classModel.Class),
 	)
-	db.AutoMigrate(&_userModel.User{})
 }

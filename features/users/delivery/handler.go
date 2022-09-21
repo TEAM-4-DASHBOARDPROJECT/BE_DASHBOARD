@@ -32,7 +32,7 @@ func (delivery *userDelivery) GetAllUser(c echo.Context) error {
 		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
 	}
 
-	idToken := middlewares.ExtractToken(c)
+	idToken,_ := middlewares.ExtractToken(c)
 
 	data, errGet := delivery.userUsecase.GetAll(page, idToken)
 	if errGet != nil {
@@ -46,7 +46,7 @@ func (delivery *userDelivery) GetAllUser(c echo.Context) error {
 
 func (delivery *userDelivery) PutDataUser(c echo.Context) error {
 
-	idToken := middlewares.ExtractToken(c)
+	idToken,_ := middlewares.ExtractToken(c)
 
 	var updateRequest Request
 	err := c.Bind(&updateRequest)
@@ -88,7 +88,7 @@ func (delivery *userDelivery) PutDataUser(c echo.Context) error {
 
 func (delivery *userDelivery) DeleteDataUser(c echo.Context) error {
 
-	idToken := middlewares.ExtractToken(c)
+	idToken,_ := middlewares.ExtractToken(c)
 	if idToken != 1 {
 		return c.JSON(400, helper.FailedResponseHelper("not have access"))
 	}
