@@ -22,6 +22,6 @@ jobs:
             git pull origin main
             docker stop dashboardproject
             docker rm dashboardproject
-            docker rmi dashboardproject
-            docker build -t dashboardproject:latest .
-            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name dashboardproject dashboardproject:latest
+            docker rmi project
+            docker build -t project:latest .
+            docker run -d -p 80:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name dashboardproject project:latest
