@@ -36,7 +36,7 @@ func (repo *menteeData) UpdateMentee(id int, newData mentee.Core) (int, error) {
 
 func (repo *menteeData) SelectMentee(class string, status string, category string) ([]mentee.Core, error) {
 	//tx := repo.db.Where("class_id = ? OR status_id = ? OR category = ?", classID, statusID, category).Find(&dataMentee)
-
+	var dataMentee []Mentee
 	if category != "" {
 		var dataByCate []Mentee
 		txCate := repo.db.Where("education_category = ?", category).Find(&dataByCate)
@@ -55,22 +55,20 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 
 	} else if class != "" {
 		var dataByClass []Mentee
-		// txClass := repo.db.Where("name = ?", class).Preload("Mentees").Find(&Classes)
+		txClass := repo.db.Where("class_name = ?", class).Preload("Classes").Find(&dataByClass)
 		// txClass := repo.db.Model(&Class{}).Select("mentees.id, mentees.fullname, classes.name, mentees.status, mentees.address, mentees.homeaddress, mentees.email, mentees.gender, mentees.telegram, mentees.phone, mentees.emergencyname, mentees.emergencyphone, mentees.emergencystatus, mentees.educationcategory, mentees.educationmajor, mentees.educationgraduate, mentees.class_id").Joins("inner join mentees on mentees.class_id = classes.id").Where("mentees.class_name = ?", class).Scan(&dataByClass)
-
-		txClass := repo.db.Joins("Class").Where(&Class{Name: class}).Find(&dataByClass)
+		// txClass := repo.db.Joins("Class").Where(&Class{Name: class}).Find(&dataByClass)
 		if txClass.Error != nil {
 			return nil, txClass.Error
 		}
 		return toCoreList(dataByClass), nil
 
 	} else {
-		var dataAll []Mentee
-		txAll := repo.db.Find(dataAll)
+		txAll := repo.db.Find(&dataMentee)
 		if txAll.Error != nil {
 			return nil, txAll.Error
 		}
-		return toCoreList(dataAll), nil
+		return toCoreList(dataMentee), nil
 	}
 
 }
