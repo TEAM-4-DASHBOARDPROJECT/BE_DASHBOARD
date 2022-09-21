@@ -9,17 +9,16 @@ type MenteeResponse struct {
 	FullName          string `json:"fullname"`
 	StatusID          uint   `json:"status_id"`
 	ClassID           uint   `json:"class_id"`
-	Category          string `json:"category"`
 	Address           string `json:"address,omitempty"`
 	HomeAddress       string `json:"homeaddress,omitempty"`
 	Email             string `json:"email,omitempty"`
-	Gender            string `json:"gender"`
+	Gender            string `json:"gender,omitempty"`
 	Telegram          string `json:"telegram,omitempty"`
 	Phone             string `json:"phone,omitempty"`
 	EmergencyName     string `json:"emergencyname,omitempty"`
 	EmergencyPhone    string `json:"emergencyphone,omitempty"`
 	EmergencyStatus   string `json:"emergencystatus,omitempty"`
-	EducationType     string `json:"educationtype,omitempty"`
+	EducationCategory string `json:"educationcategory,omitempty"`
 	EducationMajor    string `json:"educationmajor,omitempty"`
 	EducationGraduate string `json:"educationgraduate,omitempty"`
 }
@@ -30,7 +29,6 @@ func fromCore(data mentee.Core) MenteeResponse {
 		FullName:          data.FullName,
 		StatusID:          data.StatusID,
 		ClassID:           data.ClassID,
-		Category:          data.Category,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,
@@ -40,7 +38,7 @@ func fromCore(data mentee.Core) MenteeResponse {
 		EmergencyName:     data.EmergencyName,
 		EmergencyPhone:    data.EmergencyPhone,
 		EmergencyStatus:   data.EmergencyStatus,
-		EducationType:     data.EducationType,
+		EducationCategory: data.EducationCategory,
 		EducationMajor:    data.EducationMajor,
 		EducationGraduate: data.EducationGraduate,
 	}
@@ -54,7 +52,6 @@ func fromCoreList(data []mentee.Core) []MenteeResponse {
 			FullName:          v.FullName,
 			StatusID:          v.StatusID,
 			ClassID:           v.ClassID,
-			Category:          v.Category,
 			Address:           v.Address,
 			HomeAddress:       v.HomeAddress,
 			Email:             v.Email,
@@ -64,7 +61,7 @@ func fromCoreList(data []mentee.Core) []MenteeResponse {
 			EmergencyName:     v.EmergencyName,
 			EmergencyPhone:    v.EmergencyPhone,
 			EmergencyStatus:   v.EmergencyStatus,
-			EducationType:     v.EducationType,
+			EducationCategory: v.EducationCategory,
 			EducationMajor:    v.EducationMajor,
 			EducationGraduate: v.EducationGraduate,
 		})

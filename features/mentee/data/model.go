@@ -11,7 +11,6 @@ type Mentee struct {
 	FullName          string
 	StatusID          uint
 	ClassID           uint
-	Category          string
 	Address           string
 	HomeAddress       string
 	Email             string `gorm:"unique"`
@@ -21,9 +20,11 @@ type Mentee struct {
 	EmergencyName     string
 	EmergencyPhone    string
 	EmergencyStatus   string
-	EducationType     string
+	EducationCategory string
 	EducationMajor    string
 	EducationGraduate string
+	Class             Class
+	Status            Status
 }
 
 type Status struct {
@@ -43,7 +44,6 @@ func fromCore(data mentee.Core) Mentee {
 		FullName:          data.FullName,
 		StatusID:          data.StatusID,
 		ClassID:           data.ClassID,
-		Category:          data.Category,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,
@@ -53,7 +53,7 @@ func fromCore(data mentee.Core) Mentee {
 		EmergencyName:     data.EmergencyName,
 		EmergencyPhone:    data.EmergencyPhone,
 		EmergencyStatus:   data.EmergencyStatus,
-		EducationType:     data.EducationType,
+		EducationCategory: data.EducationCategory,
 		EducationMajor:    data.EducationMajor,
 		EducationGraduate: data.EducationGraduate,
 	}
@@ -65,7 +65,6 @@ func (data *Mentee) toCore() mentee.Core {
 		FullName:          data.FullName,
 		StatusID:          data.StatusID,
 		ClassID:           data.ClassID,
-		Category:          data.Category,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
 		Email:             data.Email,
@@ -75,7 +74,7 @@ func (data *Mentee) toCore() mentee.Core {
 		EmergencyName:     data.EmergencyName,
 		EmergencyPhone:    data.EmergencyPhone,
 		EmergencyStatus:   data.EmergencyStatus,
-		EducationType:     data.EducationType,
+		EducationCategory: data.EducationCategory,
 		EducationMajor:    data.EducationMajor,
 		EducationGraduate: data.EducationGraduate,
 	}

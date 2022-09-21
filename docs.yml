@@ -102,14 +102,14 @@ paths:
             examples:
               data:
                 description: "Example data user"
-                value: {
-                  fullname: "John",
-                  email: "john@gmail.com",
-                  password: "john123",
-                  team: "admission",
-                  role: "admin",
-                  status: "active",
-                }
+                value: 
+                  fullname: "John"
+                  email: "john@gmail.com"
+                  password: "john123"
+                  team: "admission"
+                  role: "admin"
+                  status: "active"
+                
       responses:
         '200':
           description: Success Response
@@ -1023,4 +1023,3 @@ components:
               message:
                 type: string
                 example: Bad Request
-              
