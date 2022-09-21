@@ -11,8 +11,8 @@ type ClassEntity struct{
 
 type UsecaseClass interface{
 	Create(class ClassEntity) (err error)
-	Update(class ClassEntity) (err error)
-	Delete(class ClassEntity) (err error)
+	Update(class ClassEntity) (row int, err error)
+	Delete(class ClassEntity) (row int, err error)
 	GetClass() (result []ClassEntity, err error)
 }
 

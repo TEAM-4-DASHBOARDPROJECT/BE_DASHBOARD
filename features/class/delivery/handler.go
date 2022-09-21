@@ -73,28 +73,17 @@ func (repo *classhandler) Update(c echo.Context) error {
 }
 
 func (repo *classhandler) Delete(c echo.Context) error{
-	var classId int
-
-	id, err := middlewares.ExtractToken(c)
-	if err != nil{
-		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+	userToken, errToken := middlewares.ExtractToken(c)
+	if userToken == 0 || errToken != nil{
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("tolong tokennya tuan!"))
 	}
-
-	classId, err = strconv.Atoi(c.Param("id"))
-	if err != nil{
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-
-	userEntity := entity.ClassEntity{}
-	userEntity.UserID = uint(id)
-	userEntity.ClassID = uint(classId)
-
-	err = repo.Usecase.Delete(userEntity)
+	var classRemove ClassRequest
+	classRemove.ClassID = userToken
+	_, err := repo.Usecase.Delete(RequestToEntity(classRemove))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("gagal delete usernya"))
 	}
-
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("succses delete class"))
+	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("delete berhasil"))
 }
 
 
