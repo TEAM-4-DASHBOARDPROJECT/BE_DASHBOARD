@@ -46,7 +46,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 	e.POST("/login", loginHandler.Login)
 
-	e.GET("/class", classHandler.GetClass, middlewares.JWTMiddleware())
+	e.GET("/class", classHandler.GetClass)
 	e.POST("/class", classHandler.Create, middlewares.JWTMiddleware())
 	e.PUT("/class/:id", classHandler.Update, middlewares.JWTMiddleware())
 	e.DELETE("/class/:id", classHandler.Delete, middlewares.JWTMiddleware())
