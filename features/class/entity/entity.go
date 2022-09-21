@@ -4,6 +4,7 @@ type ClassEntity struct{
 	ClassID		uint
 	UserID		uint
 	Name		string
+	JumlahKelas	string
 	MulaiKelas	string
 	AkhirKelas	string
 }
