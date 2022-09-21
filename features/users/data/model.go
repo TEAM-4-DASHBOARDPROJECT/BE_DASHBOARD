@@ -13,6 +13,7 @@ type User struct {
 	Password string
 	Team     string
 	Role     string
+	Status   string
 }
 
 func (data *User) toCore() users.Core {
@@ -23,6 +24,7 @@ func (data *User) toCore() users.Core {
 		Password: data.Password,
 		Team:     data.Team,
 		Role:     data.Role,
+		Status:   data.Status,
 	}
 }
 
@@ -42,5 +44,6 @@ func fromCore(data users.Core) User {
 		Password: data.Password,
 		Team:     data.Team,
 		Role:     data.Role,
+		Status:   data.Status,
 	}
 }
