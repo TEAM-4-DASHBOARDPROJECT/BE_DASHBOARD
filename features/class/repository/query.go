@@ -37,7 +37,7 @@ func (repo *classRepo) Insert(class entity.ClassEntity)(affectedRow int, err err
 func (repo *classRepo) Delete(class entity.ClassEntity) (affectedRow int, err error){
 	classModel := data.Class{}
 	classModel.ID = uint(class.ClassID)
-	tx := repo.db.Model(data.Class{})
+	tx := repo.db.Model(data.Class{}).Delete(&classModel)
 
 	if tx.Error != nil{
 		return -1, tx.Error
