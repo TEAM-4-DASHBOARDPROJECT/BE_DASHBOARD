@@ -26,6 +26,16 @@ func (usecase *userUsecase) GetAll(page, token int) ([]users.Core, error) {
 	return data, nil
 }
 
+func (usecase *userUsecase) SelectMe(id int) (users.Core, error) {
+
+	data, err := usecase.userData.GetMyProfile(id)
+	if err != nil {
+		return users.Core{}, err
+	}
+
+	return data, nil
+}
+
 func (usecase *userUsecase) PutData(data users.Core) int {
 
 	if data.Password != "" {
