@@ -42,8 +42,8 @@ func (usecase *classUsecase) Delete(class entity.ClassEntity) (err error) {
 	return nil
 }
 
-func (usecase *classUsecase) GetClass() (result []entity.ClassEntity, err error) {
-	result, err = usecase.Repo.FindAll()
+func (usecase *classUsecase) GetClass() ([]entity.ClassEntity, error) {
+	result, err := usecase.Repo.FindAll()
 	
 	return result, err
 }
