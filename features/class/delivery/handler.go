@@ -98,37 +98,37 @@ func (repo *classhandler) Delete(c echo.Context) error{
 }
 
 
-func (repo *classhandler) GetClass(c echo.Context) (err error)  {
-	result, err := repo.Usecase.GetClass()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed get class"))
-	}
-	
-	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses get class", result))
-}
-
-// func (repo *classhandler) GetClass(c echo.Context) (err error){
-// 	userToken, errToken := middlewares.ExtractToken(c)
-// 	if userToken == 0 || errToken != nil {
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("token invalid !"))
-// 	}
-
+// func (repo *classhandler) GetClass(c echo.Context) (err error)  {
 // 	result, err := repo.Usecase.GetClass()
-// 	classResult := ClassResponse{}
-
-	// for _, class := range result {
-	// 	if class.ClassID == uint(userToken) {
-	// 		classResult.ID = uint(userToken)
-	// 		classResult.Name = class.Name
-	// 		classResult.MulaiKelas = class.MulaiKelas
-	// 		classResult.AkhirKelas = class.AkhirKelas
-	// 	}
-	// }
-
-// 	if err != nil || classResult.ID < 1{
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("error get class"))
+// 	if err != nil {
+// 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed get class"))
 // 	}
-
-// 	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses", classResult))
-
+	
+// 	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses get class", result))
 // }
+
+func (repo *classhandler) GetClass(c echo.Context) (err error){
+	userToken, errToken := middlewares.ExtractToken(c)
+	if userToken == 0 || errToken != nil {
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("token invalid !"))
+	}
+
+	result, err := repo.Usecase.GetClass()
+	classResult := ClassResponse{}
+
+	for _, class := range result {
+		if class.ClassID == uint(userToken) {
+			classResult.ID = uint(userToken)
+			classResult.Name = class.Name
+			classResult.MulaiKelas = class.MulaiKelas
+			classResult.AkhirKelas = class.AkhirKelas
+		}
+	}
+
+	if err != nil || classResult.ID < 1{
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("error get class"))
+	}
+
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses", classResult))
+
+}
