@@ -19,8 +19,9 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 	}
 
 	e.POST("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
-	e.PUT("/mentee/{:id}", handler.PostMentee, middlewares.JWTMiddleware())
+	e.PUT("/mentee/:id", handler.PostMentee, middlewares.JWTMiddleware())
 	e.GET("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
+	e.DELETE("/mentee/:id", handler.PostMentee, middlewares.JWTMiddleware())
 
 }
 
@@ -80,16 +81,43 @@ func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
 
 func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 	var dataMentee []mentee.Core
-	get := c.QueryParam("get")
 
-	if get == "class" || get == "status" || get == "category" {
-		row, err := delivery.menteeUsecase.GetMentee(get)
-		if err != nil {
-			return c.JSON(400, helper.FailedResponseHelper("error get data"))
-		} else if len(row) == 0 {
-			return c.JSON(200, helper.SuccessResponseHelper("data still empty"))
-		}
+	query := c.QueryParam("class")
+	query2 := c.QueryParam("status")
+	query3 := c.QueryParam("category")
+
+	idClass, err := strconv.Atoi(query)
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
+	}
+	classID := idClass
+
+	idStatus, err := strconv.Atoi(query2)
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
+	}
+	statusID := idStatus
+
+	data, errGet := delivery.menteeUsecase.GetMentee(classID, statusID, query3)
+	if errGet != nil {
+		return c.JSON(400, helper.FailedResponseHelper("error get all data"))
+	} else if len(data) == 0 {
+		return c.JSON(200, helper.SuccessResponseHelper("data still empty"))
 	}
 
 	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", fromCoreList(dataMentee)))
+}
+
+func (delivery *MenteeDelivery) DeleteMentee(c echo.Context) error {
+	id := c.Param("id")
+	idCnv, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
+	}
+
+	row, err := delivery.menteeUsecase.DeleteMentee(idCnv)
+	if err != nil || row != 1 {
+		return c.JSON(500, helper.FailedResponseHelper("failed delete"))
+	}
+	return c.JSON(200, helper.SuccessResponseHelper("succes delete"))
 }

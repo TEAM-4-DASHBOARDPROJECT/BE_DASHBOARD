@@ -34,11 +34,22 @@ func (repo *menteeData) UpdateMentee(id int, newData mentee.Core) (int, error) {
 	return 1, nil
 }
 
-func (repo *menteeData) SelectMentee(get string) ([]mentee.Core, error) {
+func (repo *menteeData) SelectMentee(classID int, statusID int, category string) ([]mentee.Core, error) {
 	var dataMentee []Mentee
-	tx := repo.db.Where("name = ?", get).Find(&dataMentee)
+
+	tx := repo.db.Where("class_id = ? OR status_id = ? OR category = ?", classID, statusID, category).Find(&dataMentee)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
+
 	return toCoreList(dataMentee), nil
+}
+
+func (repo *menteeData) DeleteData(id int) (int, error) {
+	var deleteData Mentee
+	tx := repo.db.First(&deleteData, id)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	return 1, nil
 }
