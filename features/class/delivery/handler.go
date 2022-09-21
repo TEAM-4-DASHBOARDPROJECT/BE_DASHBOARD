@@ -5,7 +5,6 @@ import (
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -44,32 +43,23 @@ func (repo *classhandler) Create(c echo.Context) error {
 }
 
 func (repo *classhandler) Update(c echo.Context) error {
-	var userRequest ClassRequest
-	var ClassId int
+	userToken, errToken := middlewares.ExtractToken(c)
+	if userToken != 0 || errToken != nil{
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("token tuan !"))
+	}
+	var classUpdate ClassRequest
 
-	id, err := middlewares.ExtractToken(c)
-	if err != nil {
-		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+	errBind := c.Bind(&classUpdate)
+	classUpdate.ClassID = userToken
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("bind nya gagal lur"))
 	}
 
-	ClassId, err = strconv.Atoi(c.Param("id"))
+	_, err := repo.Usecase.Update(RequestToEntity(classUpdate))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("update nya gagal lur"))
 	}
-
-	err = c.Bind(&userRequest)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-
-	userEntity := RequestToEntity(userRequest)
-	userEntity.UserID = uint(id)
-	userEntity.ClassID = uint(ClassId)
-
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper(err.Error()))
-	}
-	return c.JSON(http.StatusOK, helper.FailedResponseHelper("Succses update class"))
+	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("Berhasil update class selamat"))
 }
 
 func (repo *classhandler) Delete(c echo.Context) error{
