@@ -38,7 +38,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 	//tx := repo.db.Where("class_id = ? OR status_id = ? OR category = ?", classID, statusID, category).Find(&dataMentee)
 
 	if category != "" {
-		var dataByCate []Results
+		var dataByCate []Mentee
 		txCate := repo.db.Where("education_category = ?", category).Find(&dataByCate)
 		if txCate.Error != nil {
 			return nil, txCate.Error
@@ -46,7 +46,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 		return toCoreList(dataByCate), nil
 
 	} else if status != "" {
-		var dataByStatus []Results
+		var dataByStatus []Mentee
 		txState := repo.db.Where("status = ?", status).Find(&dataByStatus)
 		if txState.Error != nil {
 			return nil, txState.Error
@@ -54,17 +54,19 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 		return toCoreList(dataByStatus), nil
 
 	} else if class != "" {
-		var dataByClass []Results
+		var dataByClass []Mentee
 		// txClass := repo.db.Where("name = ?", class).Preload("Mentees").Find(&Classes)
-		txClass := repo.db.Model(&Class{}).Select("mentees.id, mentees.fullname, classes.name, mentees.status, mentees.address, mentees.homeaddress, mentees.email, mentees.gender, mentees.telegram, mentees.phone, mentees.emergencyname, mentees.emergencyphone, mentees.emergencystatus, mentees.educationcategory, mentees.educationmajor, mentees.educationgraduate, mentees.class_id").Joins("inner join mentees on mentees.class_id = classes.id").Where("mentees.class_name = ?", class).Scan(&dataByClass)
+		// txClass := repo.db.Model(&Class{}).Select("mentees.id, mentees.fullname, classes.name, mentees.status, mentees.address, mentees.homeaddress, mentees.email, mentees.gender, mentees.telegram, mentees.phone, mentees.emergencyname, mentees.emergencyphone, mentees.emergencystatus, mentees.educationcategory, mentees.educationmajor, mentees.educationgraduate, mentees.class_id").Joins("inner join mentees on mentees.class_id = classes.id").Where("mentees.class_name = ?", class).Scan(&dataByClass)
+
+		txClass := repo.db.Joins("Class").Where(&Class{Name: class}).Find(&dataByClass)
 		if txClass.Error != nil {
 			return nil, txClass.Error
 		}
 		return toCoreList(dataByClass), nil
 
 	} else {
-		var dataAll []Results
-		txAll := repo.db.Find(&dataAll)
+		var dataAll []Mentee
+		txAll := repo.db.Find(dataAll)
 		if txAll.Error != nil {
 			return nil, txAll.Error
 		}

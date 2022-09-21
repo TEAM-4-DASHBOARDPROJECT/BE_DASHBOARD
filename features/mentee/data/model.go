@@ -26,26 +26,6 @@ type Mentee struct {
 	Class             Class
 }
 
-type Results struct {
-	ID                uint
-	FullName          string
-	ClassName         string
-	Status            string
-	Address           string
-	HomeAddress       string
-	Email             string
-	Gender            string
-	Telegram          string
-	Phone             string
-	EmergencyName     string
-	EmergencyPhone    string
-	EmergencyStatus   string
-	EducationCategory string
-	EducationMajor    string
-	EducationGraduate string
-	ClassID           uint
-}
-
 type Class struct {
 	gorm.Model
 	Name   string
@@ -73,7 +53,7 @@ func fromCore(data mentee.Core) Mentee {
 	return dataModel
 }
 
-func (data *Results) toCore() mentee.Core {
+func (data *Mentee) toCore() mentee.Core {
 	return mentee.Core{
 		ID:                data.ID,
 		FullName:          data.FullName,
@@ -93,7 +73,7 @@ func (data *Results) toCore() mentee.Core {
 	}
 }
 
-func toCoreList(data []Results) []mentee.Core {
+func toCoreList(data []Mentee) []mentee.Core {
 	var dataCore []mentee.Core
 	for key := range data {
 		dataCore = append(dataCore, data[key].toCore())
