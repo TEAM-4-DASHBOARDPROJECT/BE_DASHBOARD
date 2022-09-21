@@ -15,6 +15,10 @@ import (
 	userDelivery "immersiveProject/features/users/delivery"
 	userUsecase "immersiveProject/features/users/usecase"
 
+	teamData "immersiveProject/features/teams/data"
+	teamDelivery "immersiveProject/features/teams/delivery"
+	teamUsecase "immersiveProject/features/teams/usecase"
+
 	classhandler "immersiveProject/features/class/delivery"
 	classrepo "immersiveProject/features/class/repository"
 	classusecase "immersiveProject/features/class/usecase"
@@ -32,6 +36,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	userData := userData.New(db)
 	userUsecaseFactory := userUsecase.New(userData)
 	userDelivery.New(e, userUsecaseFactory)
+
+	teamData := teamData.New(db)
+	teamUsecase := teamUsecase.New(teamData)
+	teamDelivery.New(e, teamUsecase)
 
 	classRepo := classrepo.New(db)
 	classUsecase := classusecase.New(classRepo)
