@@ -28,7 +28,6 @@ func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		new(_userModel.User),
 		new(classModel.Class),
-		new(menteeModel.Status),
 		new(menteeModel.Mentee),
 	)
 }

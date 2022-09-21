@@ -7,6 +7,7 @@ type Core struct {
 	Password string
 	Team     string
 	Role     string
+	Status   string
 }
 
 type DataInterface interface {
