@@ -32,17 +32,17 @@ func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
 		return c.JSON(400, helper.FailedResponseHelper("error bind"))
 	}
 
-	if dataRegister.Gender != "male" || dataRegister.Gender != "female" {
-		return c.JSON(400, helper.FailedResponseHelper("gender must be male or female"))
-	}
+	// if dataRegister.Gender != "male" || dataRegister.Gender != "female" {
+	// 	return c.JSON(400, helper.FailedResponseHelper("gender must be male or female"))
+	// }
 
-	if dataRegister.EmergencyStatus != "orang tua" || dataRegister.EmergencyStatus != "saudara kandung" {
-		return c.JSON(400, helper.FailedResponseHelper("emergency status must be orang tua or saudara kandung"))
-	}
+	// if dataRegister.EmergencyStatus != "orang tua" || dataRegister.EmergencyStatus != "saudara kandung" {
+	// 	return c.JSON(400, helper.FailedResponseHelper("emergency status must be orang tua or saudara kandung"))
+	// }
 
-	if dataRegister.EducationCategory != "informatics" || dataRegister.EducationCategory != "non-informatics" {
-		return c.JSON(400, helper.FailedResponseHelper("education category must be informatics or non-informatics"))
-	}
+	// if dataRegister.EducationCategory != "informatics" || dataRegister.EducationCategory != "non-informatics" {
+	// 	return c.JSON(400, helper.FailedResponseHelper("education category must be informatics or non-informatics"))
+	// }
 
 	row, err := delivery.menteeUsecase.PostMentee(toCore(dataRegister))
 	if err != nil {
@@ -102,7 +102,7 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 	if errGet != nil {
 		return c.JSON(400, helper.FailedResponseHelper("error get all data"))
 	} else if len(data) == 0 {
-		return c.JSON(200, helper.SuccessResponseHelper("data still empty"))
+		return c.JSON(400, helper.FailedResponseHelper("data still empty"))
 	}
 
 	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", fromCoreList(dataMentee)))
@@ -117,7 +117,7 @@ func (delivery *MenteeDelivery) DeleteMentee(c echo.Context) error {
 
 	row, err := delivery.menteeUsecase.DeleteMentee(idCnv)
 	if err != nil || row != 1 {
-		return c.JSON(500, helper.FailedResponseHelper("failed delete"))
+		return c.JSON(400, helper.FailedResponseHelper("failed delete"))
 	}
-	return c.JSON(200, helper.SuccessResponseHelper("succes delete"))
+	return c.JSON(200, helper.SuccessResponseHelper("success delete"))
 }

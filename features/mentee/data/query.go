@@ -56,7 +56,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 
 	} else if class == "" && status != "" && category == "" {
 		var dataByStatus []Mentee
-		txState := repo.db.Where("name = ?", status).Preload("Statuses").Find(&dataByStatus)
+		txState := repo.db.Where("status = ?", status).Find(&dataByStatus)
 		if txState.Error != nil {
 			return nil, txState.Error
 		}
