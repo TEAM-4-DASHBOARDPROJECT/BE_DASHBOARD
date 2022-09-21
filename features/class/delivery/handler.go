@@ -44,7 +44,7 @@ func (repo *classhandler) Create(c echo.Context) error {
 
 func (repo *classhandler) Update(c echo.Context) error {
 	userToken, errToken := middlewares.ExtractToken(c)
-	if userToken != 0 || errToken != nil{
+	if userToken == 0 || errToken != nil{
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("token tuan !"))
 	}
 	var classUpdate ClassRequest
@@ -55,11 +55,11 @@ func (repo *classhandler) Update(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("bind nya gagal lur"))
 	}
 
-	_, err := repo.Usecase.Update(RequestToEntity(classUpdate))
+	result, err := repo.Usecase.Update(RequestToEntity(classUpdate))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("update nya gagal lur"))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("Berhasil update class selamat"))
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Berhasil update class selamat", result))
 }
 
 func (repo *classhandler) Delete(c echo.Context) error{
@@ -69,11 +69,11 @@ func (repo *classhandler) Delete(c echo.Context) error{
 	}
 	var classRemove ClassRequest
 	classRemove.ClassID = userToken
-	_, err := repo.Usecase.Delete(RequestToEntity(classRemove))
+	result, err := repo.Usecase.Delete(RequestToEntity(classRemove))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("gagal delete usernya"))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("delete berhasil"))
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("delete berhasil",result))
 }
 
 
