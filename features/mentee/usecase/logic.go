@@ -21,3 +21,27 @@ func (usecase *menteeUsecase) PostMentee(data mentee.Core) (int, error) {
 	}
 	return row, nil
 }
+
+func (usecase *menteeUsecase) PutMentee(id int, newData mentee.Core) (int, error) {
+	row, err := usecase.menteeData.UpdateMentee(id, newData)
+	if err != nil {
+		return -1, err
+	}
+	return row, nil
+}
+
+func (usecase *menteeUsecase) GetMentee(classID int, statusID int, category string) ([]mentee.Core, error) {
+	data, err := usecase.menteeData.SelectMentee(classID, statusID, category)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (usecase *menteeUsecase) DeleteMentee(id int) (int, error) {
+	data, err := usecase.menteeData.DeleteData(id)
+	if err != nil {
+		return -1, err
+	}
+	return data, nil
+}

@@ -1,12 +1,14 @@
 package delivery
 
-import "immersiveProject/features/mentee"
+import (
+	"immersiveProject/features/mentee"
+)
 
 type MenteeResponse struct {
-	ID                int    `json:"id"`
+	ID                uint   `json:"id"`
 	FullName          string `json:"fullname"`
-	Status            string `json:"status"`
-	Class             string `json:"class"`
+	StatusID          uint   `json:"status_id"`
+	ClassID           uint   `json:"class_id"`
 	Category          string `json:"category"`
 	Address           string `json:"address,omitempty"`
 	HomeAddress       string `json:"homeaddress,omitempty"`
@@ -26,20 +28,47 @@ func fromCore(data mentee.Core) MenteeResponse {
 	return MenteeResponse{
 		ID:                data.ID,
 		FullName:          data.FullName,
-		Status:            data.FullName,
-		Class:             data.FullName,
-		Category:          data.FullName,
-		Address:           data.FullName,
-		HomeAddress:       data.FullName,
-		Email:             data.FullName,
-		Gender:            data.FullName,
-		Telegram:          data.FullName,
-		Phone:             data.FullName,
-		EmergencyName:     data.FullName,
-		EmergencyPhone:    data.FullName,
-		EmergencyStatus:   data.FullName,
-		EducationType:     data.FullName,
-		EducationMajor:    data.FullName,
-		EducationGraduate: data.FullName,
+		StatusID:          data.StatusID,
+		ClassID:           data.ClassID,
+		Category:          data.Category,
+		Address:           data.Address,
+		HomeAddress:       data.HomeAddress,
+		Email:             data.Email,
+		Gender:            data.Gender,
+		Telegram:          data.Telegram,
+		Phone:             data.Phone,
+		EmergencyName:     data.EmergencyName,
+		EmergencyPhone:    data.EmergencyPhone,
+		EmergencyStatus:   data.EmergencyStatus,
+		EducationType:     data.EducationType,
+		EducationMajor:    data.EducationMajor,
+		EducationGraduate: data.EducationGraduate,
 	}
+}
+
+func fromCoreList(data []mentee.Core) []MenteeResponse {
+	var dataRes []MenteeResponse
+	for _, v := range data {
+		dataRes = append(dataRes, MenteeResponse{
+			ID:                v.ID,
+			FullName:          v.FullName,
+			StatusID:          v.StatusID,
+			ClassID:           v.ClassID,
+			Category:          v.Category,
+			Address:           v.Address,
+			HomeAddress:       v.HomeAddress,
+			Email:             v.Email,
+			Gender:            v.Gender,
+			Telegram:          v.Telegram,
+			Phone:             v.Phone,
+			EmergencyName:     v.EmergencyName,
+			EmergencyPhone:    v.EmergencyPhone,
+			EmergencyStatus:   v.EmergencyStatus,
+			EducationType:     v.EducationType,
+			EducationMajor:    v.EducationMajor,
+			EducationGraduate: v.EducationGraduate,
+		})
+	}
+
+	return dataRes
 }

@@ -42,6 +42,7 @@ paths:
     post:
       tags:
         - Login
+      summary: Login user
       description: Login user
       requestBody:
         content:
@@ -52,7 +53,7 @@ paths:
               data:
                 description: "Example data login"
                 value: {
-                  username: "john",
+                  email: "john@gmail.com",
                   password: "john123",
                 }
       responses:
@@ -87,45 +88,61 @@ paths:
 # USER #
   /users:
     post:
-      summary: "Add user"
       tags:
         - User
+      summary: Add user
+      description: Add user
       security:
         - JWTAuth: []
       requestBody:
-        required: true
         content:
           application/json:
             schema: 
-              type: object
               $ref: '#/components/schemas/requestUser'
-            example:
-              fullname: "John"
-              email: "john@gmail.com"
-              password: "john123"
-              team: "admission"
-              role: "admin"
-              status: "active"
+            examples:
+              data:
+                description: "Example data user"
+                value: {
+                  fullname: "John",
+                  email: "john@gmail.com",
+                  password: "john123",
+                  team: "admission",
+                  role: "admin",
+                  status: "active",
+                }
       responses:
-        200:
-          description: "Success"
+        '200':
+          description: Success Response
           content:
             application/json:
-              schema:
-                type: object
-                $ref: '#/components/responses/addUserSuccess'
-              example:
-                message: "Success add user"
-                data:
-                  id: 2
-                  fullname: "John"
-                  email: "john@gmail.com"
-                  password: "john123"
-                  team: "admission"
-                  role: "admin"
-                  status: "active"
-        400:
-          $ref: '#/components/responses/addUserFailed'
+              examples:
+                responseData:
+                  description: response success
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "insert data success",
+                      data: {
+                        id: 1,
+                        email: "john@gmail.com",
+                        password: "john123",
+                        team: "admission",
+                        role: "admin",
+                        status: "active",
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData:
+                  description: response failed
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "insert data failed"
+                  }
     get:
       tags:
         - User
@@ -493,90 +510,111 @@ components:
     requestLogin:
       type: object
       properties:
-        "username":
+        "email":
           type: string
           minLength: 1
         "password":
           type: string
           minLength: 1
+    
     requestUser:
       type: object
       properties:
-        fullname:
+        "fullname":
           type: string
-        email:
+          minLength: 1
+        "email":
           type: string
-        password:
+          minLength: 1 
+        "password":
           type: string
-        team:
+          minLength: 1 
+        "team":
           type: string
-        role:
+          minLength: 1 
+        "role":
           type: string
-        status:
-          type: string   
+          minLength: 1 
+        "status":
+          type: string 
+          minLength: 1 
+    responseUser: 
+      type: object
+      properties:
+        "id":
+          type: number
+          minLength: 1
+        "fullname":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1 
+        "team":
+          type: string
+          minLength: 1 
+        "role":
+          type: string
+          minLength: 1 
+        "status":
+          type: string 
+          minLength: 1 
+    
     requestMentee:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        fullname:
+        "fullname":
           type: string
-        address:
+          minLength: 1 
+        "address":
          type: string
-        homeaddress:
+         minLength: 1 
+        "homeaddress":
           type: string
-        email:
+          minLength: 1 
+        "email":
           type: string
-        gender:
+          minLength: 1 
+        "gender":
           type: string
-          enum:
-            - L
-            - P
-        phone:
+          minLength: 1 
+        "phone":
           type: string
-        telegram:
+          minLength: 1 
+        "telegram":
           type: string 
-        discord:
+          minLength: 1 
+        "discord":
           type: string
-        status:
+          minLength: 1 
+        "status":
           type: string
-          enum:
-            - active
-            - non-active
-        class:
+          minLength: 1 
+        "class":
           type: string
-          enum:
-            - Back-end
-            - Front-end
-            - Quality engineer
-        category:
+          minLength: 1 
+        "category":
           type: string
-          enum:
-            - IT
-            - Non-IT 
-        educationtype:
+          minLength: 1 
+        "educationtype":
           type: string
-          enum:
-            - informatics
-            - non-informatics
-        major:
+          minLength: 1 
+        "major":
           type: string
-        graduate:
-          type: integer
-          format: int32
-        institution:
+          minLength: 1 
+        "graduate":
           type: string
-        emergencyname:
+          minLength: 1 
+        "emergencyname":
           type: string
-        emergencyphone:
+          minLength: 1 
+        "emergencyphone":
           type: string
-        emergencystatus:
+          minLength: 1 
+        "emergencystatus":
           type: string
-          enum:
-            - orang tua
-            - saudarakandung
-            - kakek nenek 
+          minLength: 1 
+    
     requestLog:
       type: object
       properties:
@@ -598,7 +636,33 @@ components:
         end class:
           type: string
         
-    
+    successResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+    failedResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+
 ########## RESPONSES ##########
   responses :
 
@@ -662,36 +726,12 @@ components:
           schema:
             type: object
             properties:
-              code:
-                type: number
-                example: 200
               status:
                 type: string
                 example: success
               message:
                 type: string
                 example: success insert data user
-              data:
-                type: object
-                properties:
-                  fullname:
-                    type: string
-                    example: John
-                  email:
-                    type: string
-                    example: john@gmail.com
-                  password:
-                    type: string
-                    example: john123
-                  team:
-                    type: string
-                    example: people
-                  role:
-                    type: string
-                    example: default
-                  status:
-                    type: string
-                    example: active
     addUserFailed:
       description: error insert data user
       content:
@@ -699,9 +739,6 @@ components:
           schema:
             type: object
             properties:
-              code:
-                type: number
-                example: 400
               status:
                 type: string
                 example: failed
@@ -921,6 +958,12 @@ components:
                   total:
                     type: integer
                     example: 23
+                  start class:
+                    type: string
+                    example: 10 July 2022
+                  end class:
+                    type: string
+                    example: 10 October 2022
     createClassFailed:
       description: error insert data
       content:
@@ -946,3 +989,38 @@ components:
                   date:
                     type: string
                     example: john@gmail.com
+
+# RESPONSE GENERAL
+    responseSuccess:
+      description: success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success
+    responseFailed:
+      description: failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Bad Request
+              

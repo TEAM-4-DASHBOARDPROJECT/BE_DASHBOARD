@@ -1,10 +1,10 @@
 package mentee
 
 type Core struct {
-	ID                int
+	ID                uint
 	FullName          string
-	Status            string
-	Class             string
+	StatusID          uint
+	ClassID           uint
 	Category          string
 	Address           string
 	HomeAddress       string
@@ -20,16 +20,26 @@ type Core struct {
 	EducationGraduate string
 }
 
+type Status struct {
+	ID   uint
+	Name string
+}
+
+type Class struct {
+	ID   uint
+	Name string
+}
+
 type UsecaseInterface interface {
 	PostMentee(data Core) (int, error)
-	// GetByToken(token int) (data Core, err error)
-	PutMentee(newData Core) (row int, err error)
-	// DeleteData(token int) (int, error)
+	GetMentee(classID int, statusID int, category string) (data []Core, err error)
+	PutMentee(id int, newData Core) (row int, err error)
+	DeleteMentee(id int) (int, error)
 }
 
 type DataInterface interface {
 	AddMentee(data Core) (int, error)
-	// SelectByToken(token int) (data Core, err error)
-	UpdateData(newData Core) (row int, err error)
-	// DeleteByToken(token int) (int, error)
+	SelectMentee(classID int, statusID int, category string) (data []Core, err error)
+	UpdateMentee(id int, newData Core) (row int, err error)
+	DeleteData(id int) (int, error)
 }
