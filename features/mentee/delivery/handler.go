@@ -68,7 +68,6 @@ func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
-	var dataMentee []mentee.Core
 
 	query := c.QueryParam("class")
 	query2 := c.QueryParam("status")
@@ -93,7 +92,7 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 		return c.JSON(400, helper.FailedResponseHelper("data still empty"))
 	}
 
-	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", fromCoreList(dataMentee)))
+	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", fromCoreList(data)))
 }
 
 func (delivery *MenteeDelivery) DeleteMentee(c echo.Context) error {
