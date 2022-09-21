@@ -7,6 +7,6 @@ WORKDIR /app
 COPY . .
 
 RUN go mod tidy
-RUN go build -o BE_DASHBOARD
+RUN go build -o project-2/skeleton
 
-CMD ["./BE_DASHBOARD"]
+CMD ["./project-2/skeleton"]
