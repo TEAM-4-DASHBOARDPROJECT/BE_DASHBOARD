@@ -29,3 +29,11 @@ func (usecase *menteeUsecase) PutMentee(id int, newData mentee.Core) (int, error
 	}
 	return row, nil
 }
+
+func (usecase *menteeUsecase) GetMentee(get string) ([]mentee.Core, error) {
+	data, err := usecase.menteeData.SelectMentee(get)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}

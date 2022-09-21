@@ -80,3 +80,11 @@ func (data *Mentee) toCore() mentee.Core {
 		EducationGraduate: data.EducationGraduate,
 	}
 }
+
+func toCoreList(data []Mentee) []mentee.Core {
+	var dataCore []mentee.Core
+	for key := range data {
+		dataCore = append(dataCore, data[key].toCore())
+	}
+	return dataCore
+}

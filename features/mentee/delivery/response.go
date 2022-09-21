@@ -1,6 +1,8 @@
 package delivery
 
-import "immersiveProject/features/mentee"
+import (
+	"immersiveProject/features/mentee"
+)
 
 type MenteeResponse struct {
 	ID                uint   `json:"id"`
@@ -42,4 +44,31 @@ func fromCore(data mentee.Core) MenteeResponse {
 		EducationMajor:    data.EducationMajor,
 		EducationGraduate: data.EducationGraduate,
 	}
+}
+
+func fromCoreList(data []mentee.Core) []MenteeResponse {
+	var dataRes []MenteeResponse
+	for _, v := range data {
+		dataRes = append(dataRes, MenteeResponse{
+			ID:                v.ID,
+			FullName:          v.FullName,
+			StatusID:          v.StatusID,
+			ClassID:           v.ClassID,
+			Category:          v.Category,
+			Address:           v.Address,
+			HomeAddress:       v.HomeAddress,
+			Email:             v.Email,
+			Gender:            v.Gender,
+			Telegram:          v.Telegram,
+			Phone:             v.Phone,
+			EmergencyName:     v.EmergencyName,
+			EmergencyPhone:    v.EmergencyPhone,
+			EmergencyStatus:   v.EmergencyStatus,
+			EducationType:     v.EducationType,
+			EducationMajor:    v.EducationMajor,
+			EducationGraduate: v.EducationGraduate,
+		})
+	}
+
+	return dataRes
 }

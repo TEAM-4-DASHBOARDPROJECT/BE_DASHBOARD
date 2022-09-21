@@ -32,14 +32,14 @@ type Class struct {
 
 type UsecaseInterface interface {
 	PostMentee(data Core) (int, error)
-	// GetByToken(token int) (data Core, err error)
+	GetMentee(get string) (data []Core, err error)
 	PutMentee(id int, newData Core) (row int, err error)
 	// DeleteData(token int) (int, error)
 }
 
 type DataInterface interface {
 	AddMentee(data Core) (int, error)
-	// SelectByToken(token int) (data Core, err error)
+	SelectMentee(get string) (data []Core, err error)
 	UpdateMentee(id int, newData Core) (row int, err error)
 	// DeleteByToken(token int) (int, error)
 }

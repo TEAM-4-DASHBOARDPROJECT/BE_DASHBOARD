@@ -20,6 +20,7 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 
 	e.POST("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
 	e.PUT("/mentee/{:id}", handler.PostMentee, middlewares.JWTMiddleware())
+	e.GET("/mentee", handler.PostMentee, middlewares.JWTMiddleware())
 
 }
 
@@ -75,4 +76,20 @@ func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
 	}
 
 	return c.JSON(201, helper.SuccessResponseHelper("success update data"))
+}
+
+func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
+	var dataMentee []mentee.Core
+	get := c.QueryParam("get")
+
+	if get == "class" || get == "status" || get == "category" {
+		row, err := delivery.menteeUsecase.GetMentee(get)
+		if err != nil {
+			return c.JSON(400, helper.FailedResponseHelper("error get data"))
+		} else if len(row) == 0 {
+			return c.JSON(200, helper.SuccessResponseHelper("data still empty"))
+		}
+	}
+
+	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", fromCoreList(dataMentee)))
 }

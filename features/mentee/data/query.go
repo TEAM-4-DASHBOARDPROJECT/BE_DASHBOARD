@@ -33,3 +33,12 @@ func (repo *menteeData) UpdateMentee(id int, newData mentee.Core) (int, error) {
 	}
 	return 1, nil
 }
+
+func (repo *menteeData) SelectMentee(get string) ([]mentee.Core, error) {
+	var dataMentee []Mentee
+	tx := repo.db.Where("name = ?", get).Find(&dataMentee)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return toCoreList(dataMentee), nil
+}
