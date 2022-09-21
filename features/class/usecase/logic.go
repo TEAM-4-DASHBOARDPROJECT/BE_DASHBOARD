@@ -40,7 +40,7 @@ func (usecase *classUsecase) Update(class entity.ClassEntity) (row int, err erro
 		classMap["akhir"] = &class.AkhirKelas
 	}
 
-	result, err := usecase.Repo.Delete(class)
+	result, err := usecase.Repo.Update(class)
 	if err != nil {
 		return 0, errors.New("user already register? you can't update if your account not listed")
 	}
