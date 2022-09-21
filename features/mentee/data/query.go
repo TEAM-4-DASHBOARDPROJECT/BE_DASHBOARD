@@ -35,11 +35,10 @@ func (repo *menteeData) UpdateMentee(id int, newData mentee.Core) (int, error) {
 }
 
 func (repo *menteeData) SelectMentee(class string, status string, category string) ([]mentee.Core, error) {
-	var dataMentee []Mentee
 	//tx := repo.db.Where("class_id = ? OR status_id = ? OR category = ?", classID, statusID, category).Find(&dataMentee)
 
 	if category != "" {
-		var dataByCate []Mentee
+		var dataByCate []Results
 		txCate := repo.db.Where("education_category = ?", category).Find(&dataByCate)
 		if txCate.Error != nil {
 			return nil, txCate.Error
@@ -47,7 +46,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 		return toCoreList(dataByCate), nil
 
 	} else if status != "" {
-		var dataByStatus []Mentee
+		var dataByStatus []Results
 		txState := repo.db.Where("status = ?", status).Find(&dataByStatus)
 		if txState.Error != nil {
 			return nil, txState.Error
@@ -55,19 +54,21 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 		return toCoreList(dataByStatus), nil
 
 	} else if class != "" {
-		var dataByClass []Mentee
-		txClass := repo.db.Where("name = ?", class).Preload("Classes").Find(&dataByClass)
+		var dataByClass []Results
+		// txClass := repo.db.Where("name = ?", class).Preload("Mentees").Find(&Classes)
+		txClass := repo.db.Model(&Class{}).Select("mentees.id, mentees.fullname, classes.name, mentees.status, mentees.address, mentees.homeaddress, mentees.email, mentees.gender, mentees.telegram, mentees.phone, mentees.emergencyname, mentees.emergencyphone, mentees.emergencystatus, mentees.educationcategory, mentees.educationmajor, mentees.educationgraduate, mentees.class_id").Joins("inner join mentees on mentees.class_id = classes.id").Where("mentees.class_name = ?", class).Scan(&dataByClass)
 		if txClass.Error != nil {
 			return nil, txClass.Error
 		}
-		return toCoreList(dataMentee), nil
+		return toCoreList(dataByClass), nil
 
 	} else {
-		txAll := repo.db.Find(&dataMentee)
+		var dataAll []Results
+		txAll := repo.db.Find(&dataAll)
 		if txAll.Error != nil {
 			return nil, txAll.Error
 		}
-		return toCoreList(dataMentee), nil
+		return toCoreList(dataAll), nil
 	}
 
 }

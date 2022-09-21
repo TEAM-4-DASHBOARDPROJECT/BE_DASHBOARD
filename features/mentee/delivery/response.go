@@ -7,7 +7,7 @@ import (
 type MenteeResponse struct {
 	ID                uint   `json:"id"`
 	FullName          string `json:"fullname"`
-	ClassName         string `json:"class_name"`
+	ClassName         string `json:"classname"`
 	Status            string `json:"status"`
 	Address           string `json:"address,omitempty"`
 	HomeAddress       string `json:"homeaddress,omitempty"`
