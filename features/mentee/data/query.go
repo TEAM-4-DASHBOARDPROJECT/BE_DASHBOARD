@@ -38,7 +38,7 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 	var dataMentee []Mentee
 	//tx := repo.db.Where("class_id = ? OR status_id = ? OR category = ?", classID, statusID, category).Find(&dataMentee)
 
-	if class == "" && status == "" && category != "" {
+	if category != "" {
 		var dataByCate []Mentee
 		txCate := repo.db.Where("education_category = ?", category).Find(&dataByCate)
 		if txCate.Error != nil {
@@ -46,21 +46,21 @@ func (repo *menteeData) SelectMentee(class string, status string, category strin
 		}
 		return toCoreList(dataByCate), nil
 
-	} else if class != "" && status == "" && category == "" {
-		var dataByClass []Mentee
-		txClass := repo.db.Where("name = ?", class).Preload("Classes").Find(&dataByClass)
-		if txClass.Error != nil {
-			return nil, txClass.Error
-		}
-		return toCoreList(dataMentee), nil
-
-	} else if class == "" && status != "" && category == "" {
+	} else if status != "" {
 		var dataByStatus []Mentee
 		txState := repo.db.Where("status = ?", status).Find(&dataByStatus)
 		if txState.Error != nil {
 			return nil, txState.Error
 		}
 		return toCoreList(dataByStatus), nil
+
+	} else if class != "" {
+		var dataByClass []Mentee
+		txClass := repo.db.Where("name = ?", class).Preload("Classes").Find(&dataByClass)
+		if txClass.Error != nil {
+			return nil, txClass.Error
+		}
+		return toCoreList(dataMentee), nil
 
 	} else {
 		txAll := repo.db.Find(&dataMentee)
