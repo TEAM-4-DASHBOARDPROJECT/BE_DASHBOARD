@@ -4,6 +4,7 @@ import "immersiveProject/features/mentee"
 
 type MenteeRequest struct {
 	FullName          string `json:"name" form:"name"`
+	ClassID           uint   `json:"class_id" form:"class_id"`
 	Status            string `json:"status" form:"status"`
 	Address           string `json:"address" form:"address"`
 	HomeAddress       string `json:"homeaddress" form:"homeaddress"`
@@ -22,6 +23,7 @@ type MenteeRequest struct {
 func toCore(data MenteeRequest) mentee.Core {
 	return mentee.Core{
 		FullName:          data.FullName,
+		ClassID:           data.ClassID,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,

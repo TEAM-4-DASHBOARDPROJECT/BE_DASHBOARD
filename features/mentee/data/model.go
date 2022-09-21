@@ -9,6 +9,7 @@ import (
 type Mentee struct {
 	gorm.Model
 	FullName          string
+	ClassID           uint
 	Status            string
 	Address           string
 	HomeAddress       string
@@ -34,6 +35,7 @@ type Class struct {
 func fromCore(data mentee.Core) Mentee {
 	dataModel := Mentee{
 		FullName:          data.FullName,
+		ClassID:           data.ClassID,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
