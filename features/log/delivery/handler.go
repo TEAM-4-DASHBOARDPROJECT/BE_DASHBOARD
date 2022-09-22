@@ -7,6 +7,7 @@ import (
 	"immersiveProject/utils/helper"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -56,8 +57,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("image size error"))
 	}
 
-	imageName := strconv.Itoa(logToken) + " " + "Feedback" + imageExtension
-
+	imageName := strconv.Itoa(logToken) + "_" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + imageExtension
 	image, errUploadImage := helper.UploadFileToS3(config.LogsImages, imageName, config.ContentImage, imageData)
 
 	if errUploadImage != nil {
@@ -79,7 +79,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
 	}
 
-	filename := strconv.Itoa(logToken) + "_ " + "Feedback" + fileExtension
+	filename := strconv.Itoa(logToken) + "_" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
 	file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
 
 	if errUploadFile != nil {
