@@ -28,27 +28,26 @@ func (repo *classRepo) Insert(class entity.ClassEntity) (affectedRow int, err er
 	}
 
 	if tx.RowsAffected < 1 {
-		return int(tx.RowsAffected), errors.New("class not insert")
+		return int(tx.RowsAffected), errors.New("failed insert class")
 	}
 
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *classRepo) Delete(class entity.ClassEntity) (affectedRow int, err error) {
+func (repo *classRepo) DeleteData(id int) (row int, err error) {
 	classModel := data.Class{}
-	classModel.ID = uint(class.ClassID)
-	tx := repo.db.Model(data.Class{}).Delete(&classModel)
 
+	tx := repo.db.Where("id = ?", id).Delete(&classModel)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return 0, errors.New("failed to delete class")
+		return 0, errors.New("failed  delete class")
 	}
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *classRepo) Update(class entity.ClassEntity) (affectedRow int, err error) {
+func (repo *classRepo) UpdateData(id int, class entity.ClassEntity) (row int, err error) {
 	classModel := data.EntityToModel(class)
 	tx := repo.db.Model(&data.Class{}).Where("id = ?", class.ClassID).Updates(&classModel)
 	if tx.Error != nil {

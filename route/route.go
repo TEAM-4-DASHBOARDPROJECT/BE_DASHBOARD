@@ -21,7 +21,7 @@ import (
 
 	classhandler "immersiveProject/features/class/delivery"
 	classrepo "immersiveProject/features/class/repository"
-	classusecase "immersiveProject/features/class/usecase"
+	classUsecase "immersiveProject/features/class/usecase"
 
 	menteeData "immersiveProject/features/mentee/data"
 	menteeDelivery "immersiveProject/features/mentee/delivery"
@@ -41,8 +41,8 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	teamUsecase := teamUsecase.New(teamData)
 	teamDelivery.New(e, teamUsecase)
 
-	classRepo := classrepo.New(db)
-	classUsecase := classusecase.New(classRepo)
+	classrepo := classrepo.New(db)
+	classUsecase := classUsecase.New(classrepo)
 	classHandler := classhandler.New(classUsecase)
 
 	menteeData := menteeData.New(db)
@@ -56,7 +56,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 	e.GET("/class", classHandler.GetClass)
 	e.POST("/class", classHandler.Create, middlewares.JWTMiddleware())
-	e.PUT("/class/:id", classHandler.Update, middlewares.JWTMiddleware())
-	e.DELETE("/class/:id", classHandler.Delete, middlewares.JWTMiddleware())
+	e.PUT("/class/:id", classHandler.UpdateClass, middlewares.JWTMiddleware())
+	e.DELETE("/class/:id", classHandler.DeleteClass, middlewares.JWTMiddleware())
 
 }
