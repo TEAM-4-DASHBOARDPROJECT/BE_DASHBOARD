@@ -70,5 +70,6 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 	e.GET("/log", logHandler.FindLog, middlewares.JWTMiddleware())
 	e.POST("/log", logHandler.Createlog, middlewares.JWTMiddleware())
+	
 
 }

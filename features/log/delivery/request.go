@@ -16,7 +16,7 @@ func FromCoreRequest(logData LogRequest) entity.Log {
 	}
 }
 
-func toCoreRequest(logData LogRequest) entity.Log {
+func ToCoreRequest(logData LogRequest) entity.Log {
 	return entity.Log{
 		Feedback:  logData.Feedback,
 		StatusLog: logData.StatusLog,

@@ -54,7 +54,14 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 	}
-	return c.JSON(http.StatusOK, helper.DoUpload(handler.conn, *file, file.Filename))
+	link := helper.DoUpload(handler.conn, *file, file.Filename)
+	logs.File = link
+
+	status, err := handler.LogInterface.CreateLog(entity.Log{})
+	if err != nil{
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
+	}
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Succses", status))
 	
 }
 
