@@ -16,7 +16,7 @@ func New(logic entity.InterfaceLog) entity.InterfaceLog {
 }
 
 func (logic *logLogic) CreateLog(logCreate entity.Log) (int, error){
-	if logCreate.Feedback == "" || logCreate.Status == "" || logCreate.UrlFile == "" {
+	if logCreate.Feedback == "" || logCreate.StatusLog == "" || logCreate.File == "" {
 		return -1, errors.New("log not fuel field")
 	}
 	
