@@ -27,6 +27,7 @@ func fromCore(data mentee.Core) MenteeResponse {
 	return MenteeResponse{
 		ID:                data.ID,
 		FullName:          data.FullName,
+		ClassName:         data.ClassName,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
@@ -49,6 +50,7 @@ func fromCoreList(data []mentee.Core) []MenteeResponse {
 		dataRes = append(dataRes, MenteeResponse{
 			ID:                v.ID,
 			FullName:          v.FullName,
+			ClassName:         v.ClassName,
 			Status:            v.Status,
 			Address:           v.Address,
 			HomeAddress:       v.HomeAddress,
