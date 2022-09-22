@@ -1,80 +1,91 @@
 package usecase
 
 import (
+	"errors"
 	"immersiveProject/features/users"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-type userUsecase struct {
-	userData users.DataInterface
+type userService struct {
+	dataUser users.DataInterface
 }
 
-func New(data users.DataInterface) users.UsecaseInterface {
-	return &userUsecase{
-		userData: data,
+func New(data users.DataInterface) users.ServiceInterface {
+	return &userService{
+		dataUser: data,
 	}
+
 }
 
-func (usecase *userUsecase) GetAll(page, token int) ([]users.Core, error) {
+func (service *userService) GetAll(token int) ([]users.UserCore, error) {
 
-	data, err := usecase.userData.SelectAll(page, token)
+	dataAll, err := service.dataUser.SelectAll(token)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed get all data")
+	} else if len(dataAll) == 0 {
+		return nil, errors.New("data is still empty")
+	} else {
+		return dataAll, nil
 	}
 
-	return data, nil
 }
 
-func (usecase *userUsecase) SelectMe(id int) (users.Core, error) {
+func (service *userService) GetById(param, token int) (users.UserCore, error) {
 
-	data, err := usecase.userData.GetMyProfile(id)
+	dataId, err := service.dataUser.SelectById(param, token)
 	if err != nil {
-		return users.Core{}, err
+		return users.UserCore{}, err
 	}
 
-	return data, nil
-}
-
-func (usecase *userUsecase) PutData(data users.Core) int {
-
-	if data.Password != "" {
-		hash, _ := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
-		data.Password = string(hash)
-	}
-
-	row := usecase.userData.UpdateData(data)
-	if row == -1 {
-		return -1
-	}
-
-	return row
+	return dataId, nil
 
 }
 
-func (usecase *userUsecase) DeleteData(id int) int {
+func (service *userService) PostData(data users.UserCore) (int, error) {
 
-	row := usecase.userData.DelData(id)
-	if row == -1 {
-		return -1
+	if data.Email != "" && data.Name != "" && data.Password != "" {
+		passByte := []byte(data.Password)
+		hashPass, _ := bcrypt.GenerateFromPassword(passByte, bcrypt.DefaultCost)
+		data.Password = string(hashPass)
+		add, err := service.dataUser.CreateData(data)
+		if err != nil || add == 0 {
+			return -1, err
+		} else {
+			return 1, nil
+		}
+	} else {
+		return -1, errors.New("all input data must be filled")
 	}
 
-	return row
 }
 
-func (usecase *userUsecase) PostData(data users.Core) int {
+func (service *userService) PutData(param, token int, data users.UserCore) (int, error) {
 
-	if data.Password == "" || data.Email == "" || data.Name == "" || data.Role == "" || data.Team == "" {
-		return -1
+	if param != token {
+		return -1, errors.New("not have access")
 	}
 
-	hash, _ := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
-	data.Password = string(hash)
-
-	row := usecase.userData.InsertData(data)
-	if row == -1 {
-		return -1
+	row, err := service.dataUser.UpdateData(param, data)
+	if err != nil || row == 0 {
+		return -1, err
 	}
 
-	return row
+	return 1, nil
+
+}
+
+func (service *userService) DeleteData(param, token int) (int, error) {
+
+	if param != token {
+		return -1, errors.New("not have access")
+	}
+
+	_, err := service.dataUser.DelData(param)
+	if err != nil {
+		return -1, err
+	}
+
+	return 1, nil
+
 }

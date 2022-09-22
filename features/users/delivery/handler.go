@@ -4,139 +4,122 @@ import (
 	"immersiveProject/features/users"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
+	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-type userDelivery struct {
-	userUsecase users.UsecaseInterface
+type UserHandler struct {
+	data users.ServiceInterface
 }
 
-func New(e *echo.Echo, data users.UsecaseInterface) {
-	handler := &userDelivery{
-		userUsecase: data,
+func New(e *echo.Echo, usecase users.ServiceInterface) {
+
+	handler := UserHandler{
+		data: usecase,
 	}
 
-	e.GET("/users", handler.GetAllUser, middlewares.JWTMiddleware())
-	e.GET("/users/me", handler.MyProfile, middlewares.JWTMiddleware())
-	e.PUT("/users", handler.PutDataUser, middlewares.JWTMiddleware())
-	e.DELETE("/manager/:id", handler.DeleteDataUser, middlewares.JWTMiddleware())
-	e.POST("/manager", handler.PostDataUser, middlewares.JWTMiddleware()) //<<=== Sementara tidak pakai token dulu
+	e.GET("/users", handler.GetAllWithJWT, middlewares.JWTMiddleware())
+	e.GET("/users/:id", handler.GetByIdWithJWT, middlewares.JWTMiddleware())
+	e.POST("/users", handler.AddUser, middlewares.JWTMiddleware())
+	e.PUT("/users/:id", handler.PutDataWithJWT, middlewares.JWTMiddleware())
+	e.DELETE("/users/:id", handler.DeldateWithJWT, middlewares.JWTMiddleware())
 
 }
 
-func (delivery *userDelivery) GetAllUser(c echo.Context) error {
-	param := c.QueryParam("page")
-	page, err := strconv.Atoi(param)
+func (users *UserHandler) GetAllWithJWT(e echo.Context) error {
+
+	idToken, _ := middlewares.ExtractToken(e)
+	res, err := users.data.GetAll(idToken)
 	if err != nil {
-		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
+		return e.JSON(400, helper.FailedResponseHelper("err"))
 	}
 
-	idToken, _ := middlewares.ExtractToken(c)
+	respon := toResponList(res)
 
-	data, errGet := delivery.userUsecase.GetAll(page, idToken)
-	if errGet != nil {
-		return c.JSON(400, helper.FailedResponseHelper("get all data failed"))
-	} else if len(data) == 0 {
-		return c.JSON(200, helper.SuccessResponseHelper("user data is empty"))
-	}
+	return e.JSON(200, helper.SuccessDataResponseHelper("succes get all data", respon))
 
-	return c.JSON(200, helper.SuccessDataResponseHelper("success get data", toResponList(data)))
 }
 
-func (delivery *userDelivery) MyProfile(c echo.Context) error {
+func (users *UserHandler) GetByIdWithJWT(e echo.Context) error {
 
-	idToken, _ := middlewares.ExtractToken(c)
-
-	data, err := delivery.userUsecase.SelectMe(idToken)
-	if err != nil {
-		return c.JSON(400, helper.FailedResponseHelper("failed get my profile"))
+	idToken, _ := middlewares.ExtractToken(e)
+	id := helper.ParamInt(e)
+	if id == -1 {
+		return e.JSON(400, helper.FailedResponseHelper("param must be number"))
 	}
 
-	return c.JSON(200, helper.SuccessDataResponseHelper("get profile success", toRespon(data)))
+	res, err := users.data.GetById(id, idToken)
+	if err != nil {
+		return e.JSON(400, helper.FailedResponseHelper("id not found"))
+	}
+
+	respon := toResponId(res)
+
+	return e.JSON(200, helper.SuccessDataResponseHelper("succes get data by id", respon))
+
 }
 
-func (delivery *userDelivery) PutDataUser(c echo.Context) error {
+func (users *UserHandler) AddUser(e echo.Context) error {
 
-	idToken, _ := middlewares.ExtractToken(c)
-
-	var updateRequest Request
-	err := c.Bind(&updateRequest)
+	var req UserReq
+	err := e.Bind(&req)
 	if err != nil {
-		return c.JSON(400, helper.FailedResponseHelper("error bind"))
+		return e.JSON(400, helper.FailedResponseHelper("err"))
 	}
-
-	var updateData users.Core
-	if updateRequest.Name != "" {
-		updateData.Name = updateRequest.Name
-	}
-	if updateRequest.Email != "" {
-		updateData.Email = updateRequest.Email
-	}
-	if updateRequest.Password != "" {
-		updateData.Password = updateRequest.Password
-	}
-	if updateRequest.Role != "" {
-		updateData.Role = updateRequest.Role
-	}
-	if updateRequest.Team != "" {
-		updateData.Team = updateRequest.Team
-	}
-
+	idToken, _ := middlewares.ExtractToken(e) // barusan di tambah
+	// id := helper.ParamInt(e)
 	if idToken != 1 {
-		if updateRequest.Role != "" || updateRequest.Team != "" || updateRequest.ID != uint(idToken) {
-			return c.JSON(400, helper.FailedResponseHelper("not have access"))
-		}
-	}
-	updateData.ID = updateRequest.ID
-	row := delivery.userUsecase.PutData(updateData)
-	if row == -1 {
-		return c.JSON(400, helper.FailedResponseHelper("failed to update data"))
+		return e.JSON(400, helper.FailedResponseHelper("kamu tidak bukan superman"))
 	}
 
-	return c.JSON(200, helper.SuccessResponseHelper("success update data"))
+	add := ToCore(req)
+	row, _ := users.data.PostData(add)
+	if row == 1 {
+		return e.JSON(200, helper.SuccessResponseHelper("succes insert data"))
+	} else {
+		return e.JSON(400, helper.FailedResponseHelper("errPost"))
+	}
 
 }
 
-func (delivery *userDelivery) DeleteDataUser(c echo.Context) error {
+func (users *UserHandler) PutDataWithJWT(e echo.Context) error {
 
-	idToken, _ := middlewares.ExtractToken(c)
-	if idToken != 1 {
-		return c.JSON(400, helper.FailedResponseHelper("you not have access"))
-	}
+	id := e.Param("id")
+	idProd, _ := strconv.Atoi(id)
+	idFromToken, _ := middlewares.ExtractToken(e)
+	prodReq := UserReq{}
+	err := e.Bind(&prodReq)
 
-	param := c.Param("id")
-	id, err := strconv.Atoi(param)
 	if err != nil {
-		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
+		return e.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed to bind data, check your input"))
 	}
-
-	row := delivery.userUsecase.DeleteData(id)
-	if row == -1 || row == 0 {
-		return c.JSON(400, helper.FailedResponseHelper("delete data failed"))
+	dataProduct := ToCore(prodReq)
+	row, errUpd := users.data.PutData(idProd, idFromToken, dataProduct)
+	if errUpd != nil {
+		return e.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("you dont have access"))
 	}
+	if row == 0 {
+		return e.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed to update data"))
+	}
+	return e.JSON(http.StatusOK, helper.SuccessResponseHelper("success"))
 
-	return c.JSON(200, helper.SuccessResponseHelper("success delete data"))
 }
 
-func (delivery *userDelivery) PostDataUser(c echo.Context) error {
+func (users *UserHandler) DeldateWithJWT(e echo.Context) error {
 
-	var data Request
-	err := c.Bind(&data)
-	if err != nil || data.ID != 0 {
-		return c.JSON(400, helper.FailedResponseHelper("error bindig data"))
+	idToken, _ := middlewares.ExtractToken(e)
+	id := helper.ParamInt(e)
+	if id == -1 {
+		return e.JSON(400, helper.FailedResponseHelper("param must be number"))
 	}
 
-	idToken, _ := middlewares.ExtractToken(c)
-	if idToken != 1 {
-		return c.JSON(400, helper.FailedResponseHelper("not have access"))
+	row, _ := users.data.DeleteData(id, idToken)
+	if row == 1 {
+		return e.JSON(200, helper.SuccessResponseHelper("succes delete data"))
+	} else {
+		return e.JSON(400, helper.FailedResponseHelper("not have access"))
 	}
 
-	row := delivery.userUsecase.PostData(data.toCoreReq())
-	if row == -1 || row == 0 {
-		return c.JSON(400, helper.FailedResponseHelper("failed insert data"))
-	}
-
-	return c.JSON(200, helper.SuccessResponseHelper("success insert data"))
 }

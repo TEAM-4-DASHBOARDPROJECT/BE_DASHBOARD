@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"immersiveProject/features/class/data"
 	"immersiveProject/features/teams"
 
 	// _ "immersiveProject/features/teams/data"
@@ -10,62 +9,118 @@ import (
 	"gorm.io/gorm"
 )
 
-type teamsRepo struct {
-	db *gorm.DB
+type teamData struct {
+	DB *gorm.DB
 }
 
-func New(db *gorm.DB) *teamsRepo {
-	return &teamsRepo{
-		db: db,
+func New(conn *gorm.DB) teams.DataInterface {
+	return &teamData{
+		DB: conn,
 	}
 }
 
-func (repo *teamsRepo) Insert(data teams.Core) (affectedRow int, err error) {
-	var dataInsert = entityToModel(data)
-	tx := repo.db.Create(&dataInsert)
+func (repo *teamData) SelectAll() ([]teams.TeamCore, error) {
+
+	var dataTeam []Team
+	tx := repo.DB.Find(&dataTeam)
 	if tx.Error != nil {
-		return -1, err
+		return nil, tx.Error
+	}
+
+	dataTeamCore := toTeamList(dataTeam)
+
+	return dataTeamCore, nil
+
+}
+
+func (repo *teamData) SelectById(param int) (teams.TeamCore, error) {
+
+	var data Team
+	tx := repo.DB.First(&data, param)
+	if tx.Error != nil {
+		return teams.TeamCore{}, tx.Error
+	}
+
+	teamId := data.ToTeamUser()
+	return teamId, nil
+
+}
+
+func (repo *teamData) CreateData(data teams.TeamCore, token int) (int, error) {
+
+	var datacheck User
+	txcheck := repo.DB.Where("ID=?", token).First(&datacheck)
+	if txcheck.Error != nil {
+		return -1, errors.New("error tx")
+	}
+
+	if int(datacheck.ID) != token {
+		return -1, errors.New("not have access")
+	}
+
+	dataModel := InsTeam(data)
+	dataModel.UserID = uint(token)
+	tx := repo.DB.Create(&dataModel)
+	if tx.Error != nil {
+		return 0, tx.Error
 	}
 
 	return int(tx.RowsAffected), nil
+
 }
 
-func (repo *teamsRepo) Delete(team teams.Core) (affectedRow int, err error) {
-	teamModel := Team{}
-	teamModel.ID = team.ID
-	tx := repo.db.Model(Team{})
+func (repo *teamData) UpdateData(param, token int, dataUpdate teams.TeamCore) (int, error) {
 
+	var datacheck Team
+	tx := repo.DB.First(&datacheck, param)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
-	if tx.RowsAffected == 0 {
-		return 0, errors.New("failed to delete class")
+
+	TeamId := datacheck.ToTeamUser()
+
+	if TeamId.UserID == uint(token) {
+		var data Team
+		data.Name = dataUpdate.Name
+
+		var team Team
+		team.ID = dataUpdate.ID
+		txUpdateId := repo.DB.Model(&TeamId).Updates(data)
+		if txUpdateId.Error != nil {
+			return -1, txUpdateId.Error
+		}
+
+		var err error
+
+		return int(txUpdateId.RowsAffected), err
+	} else {
+		return -1, errors.New("not have access")
 	}
-	return int(tx.RowsAffected), nil
+
 }
 
-func (repo *teamsRepo) Update(teams teams.Core) (affectedRow int, err error) {
-	teamsModel := entityToModel(teams)
-	tx := repo.db.Model(&data.Class{}).Where("id = ?", teams.ID).Updates(&teamsModel)
+func (repo *teamData) DelData(param, token int) (int, error) {
+
+	var datacheck Team
+	tx := repo.DB.First(&datacheck, param)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
-	if tx.RowsAffected == 0 {
-		return 0, errors.New("failed to update data")
-	}
-	return int(tx.RowsAffected), nil
-}
 
-func (repo *teamsRepo) FindAll() (result []teams.Core, err error) {
-	teamsModels := []Team{}
-	tx := repo.db.Model(&Team{})
-	if tx.Error != nil {
-		return result, tx.Error
+	teamId := datacheck.ToTeamUser()
+
+	if teamId.UserID == uint(token) {
+		var data Team
+		txDelId := repo.DB.Delete(&data, param)
+		if txDelId.Error != nil {
+			return -1, txDelId.Error
+		}
+
+		var err error
+
+		return int(txDelId.RowsAffected), err
+	} else {
+		return -1, errors.New("not access")
 	}
 
-	for _, teams := range teamsModels {
-		result = append(result, ModelToEntity(teams))
-	}
-
-	return result, nil
 }

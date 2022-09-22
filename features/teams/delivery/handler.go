@@ -4,110 +4,121 @@ import (
 	"immersiveProject/features/teams"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
-	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-type teamHandler struct {
-	Usecase teams.UsecaseTeam
+type TeamHandler struct {
+	data teams.ServiceInterface
 }
 
-func New(e *echo.Echo, usecase teams.UsecaseTeam) {
-	handler := &teamHandler{
-		Usecase: usecase,
+func New(e *echo.Echo, usecase teams.ServiceInterface) {
+
+	handler := TeamHandler{
+		data: usecase,
 	}
 
-	e.POST("/teams", handler.Create, middlewares.JWTMiddleware())
-	e.PUT("/teams/:id", handler.Update, middlewares.JWTMiddleware())
-	e.GET("/teams", handler.GetTeam, middlewares.JWTMiddleware())
-	e.DELETE("/teams", handler.Delete, middlewares.JWTMiddleware())
+	e.GET("/teams", handler.GetAllWithJWT, middlewares.JWTMiddleware())
+	e.GET("/teams/:id", handler.GetByIdWithJWT, middlewares.JWTMiddleware())
+	e.POST("/teams", handler.AddUser, middlewares.JWTMiddleware())
+	e.PUT("/teams/:id", handler.PutDataWithJWT, middlewares.JWTMiddleware())
+	e.DELETE("/teams/:id", handler.DeldateWithJWT, middlewares.JWTMiddleware())
 
 }
 
-func (repo *teamHandler) Create(c echo.Context) error {
-	var userRequest TeamRequest
+func (th *TeamHandler) GetAllWithJWT(e echo.Context) error {
 
-	id, err := middlewares.ExtractToken(c)
+	res, err := th.data.GetAll()
 	if err != nil {
-		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+		return e.JSON(400, helper.FailedResponseHelper("tidak ada data"))
 	}
 
-	err = c.Bind(&userRequest)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-	userEntity := RequestToEntity(userRequest)
-	userEntity.UserID = uint(id)
+	respon := toResponList(res)
 
-	err = repo.Usecase.Create(userEntity)
+	return e.JSON(200, helper.SuccessDataResponseHelper("succes get all data", respon))
 
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper(err.Error()))
-	}
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("Succses Create Teams"))
 }
 
-func (repo *teamHandler) Update(c echo.Context) error {
-	var userRequest TeamRequest
-	var teamId int
+func (th *TeamHandler) GetByIdWithJWT(e echo.Context) error {
 
-	id, err := middlewares.ExtractToken(c)
-	if err != nil {
-		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+	id := helper.ParamInt(e)
+	if id == -1 {
+		return e.JSON(400, helper.FailedResponseHelper("param must be number"))
 	}
 
-	teamId, err = strconv.Atoi(c.Param("id"))
+	res, err := th.data.GetById(id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+		return e.JSON(400, helper.FailedResponseHelper("id not found"))
 	}
 
-	err = c.Bind(&userRequest)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
+	respon := toRespon(res)
 
-	userEntity := RequestToEntity(userRequest)
-	userEntity.UserID = uint(id)
-	userEntity.ID = uint(teamId)
+	return e.JSON(200, helper.SuccessDataResponseHelper("succes get data by id", respon))
 
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper(err.Error()))
-	}
-	return c.JSON(http.StatusOK, helper.FailedResponseHelper("Succses update team"))
 }
 
-func (repo *teamHandler) Delete(c echo.Context) error {
-	var teamId int
+func (th *TeamHandler) AddUser(e echo.Context) error {
 
-	id, err := middlewares.ExtractToken(c)
+	idToken, _ := middlewares.ExtractToken(e)
+	var req Request
+	err := e.Bind(&req)
 	if err != nil {
-		return c.JSON(http.StatusForbidden, helper.FailedResponseHelper(err.Error()))
+		return e.JSON(400, helper.FailedResponseHelper("err"))
 	}
 
-	teamId, err = strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
+	add := toCore(req)
+	row, _ := th.data.PostData(add, idToken)
+	if row == 1 {
+		return e.JSON(200, helper.SuccessResponseHelper("succes insert data"))
+	} else {
+		return e.JSON(400, helper.FailedResponseHelper("failed insert teams"))
 	}
 
-	userEntity := teams.Core{}
-	userEntity.UserID = uint(id)
-	userEntity.ID = uint(teamId)
-
-	err = repo.Usecase.Delete(userEntity)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper(err.Error()))
-	}
-
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("succses delete team"))
 }
 
-func (repo *teamHandler) GetTeam(c echo.Context) (err error) {
-	result, err := repo.Usecase.GetTeam()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed get team"))
+func (th *TeamHandler) PutDataWithJWT(e echo.Context) error {
+
+	idToken, _ := middlewares.ExtractToken(e)
+	id := helper.ParamInt(e)
+	if id == -1 {
+		return e.JSON(400, helper.FailedResponseHelper("id not found"))
 	}
 
-	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses get team", result))
+	var req Request
+	err := e.Bind(&req)
+	if err != nil {
+		return e.JSON(400, helper.FailedResponseHelper("error bind"))
+	}
+
+	var add teams.TeamCore
+	if req.Name != "" {
+		add.Name = req.Name
+	}
+
+	add.ID = uint(id)
+
+	row, _ := th.data.PutData(id, idToken, add)
+	if row == 1 {
+		return e.JSON(200, helper.SuccessResponseHelper("succes update data"))
+	} else {
+		return e.JSON(400, helper.FailedResponseHelper("not have access"))
+	}
+
+}
+
+func (th *TeamHandler) DeldateWithJWT(e echo.Context) error {
+
+	idToken, _ := middlewares.ExtractToken(e)
+	id := helper.ParamInt(e)
+	if id == -1 {
+		return e.JSON(400, helper.FailedResponseHelper("param must be number"))
+	}
+
+	row, _ := th.data.DeleteData(id, idToken)
+	if row == 1 {
+		return e.JSON(200, helper.SuccessResponseHelper("succes delete data"))
+	} else {
+		return e.JSON(400, helper.FailedResponseHelper("not have access"))
+	}
+
 }

@@ -7,85 +7,124 @@ import (
 	"gorm.io/gorm"
 )
 
-type dataUser struct {
-	db *gorm.DB
+type userData struct {
+	DB *gorm.DB
 }
 
-func New(db *gorm.DB) users.DataInterface {
-	return &dataUser{
-		db: db,
+func New(conn *gorm.DB) users.DataInterface {
+	return &userData{
+		DB: conn,
 	}
 }
-func (repo *dataUser) GetMyProfile(token int) (users.Core, error) {
+
+func (repo *userData) team() []Team {
+
+	var dataTeamUser []Team
+	tx := repo.DB.Find(&dataTeamUser)
+	if tx.Error != nil {
+		return nil
+	}
+
+	return dataTeamUser
+
+}
+
+func (repo *userData) SelectAll(token int) ([]users.UserCore, error) {
+
+	var datacheck User
+	txcheck := repo.DB.Where("ID=?", token).First(&datacheck)
+	if txcheck.Error != nil {
+		return nil, errors.New("error tx")
+	}
+
+	if int(datacheck.ID) != token {
+		return nil, errors.New("not have access")
+	}
+
+	var dataAll []User
+	tx := repo.DB.Find(&dataAll)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	teamList := repo.team()
+
+	dataCore := toUserCoreList(dataAll, teamList)
+	return dataCore, nil
+
+}
+
+func (repo *userData) SelectById(param, token int) (users.UserCore, error) {
+
+	var datacheck User
+	txcheck := repo.DB.Where("ID=?", token).First(&datacheck)
+	if txcheck.Error != nil {
+		return users.UserCore{}, errors.New("error tx")
+	}
+
+	if int(datacheck.ID) != token {
+		return users.UserCore{}, errors.New("not have access")
+	}
 
 	var data User
-	tx := repo.db.First(&data, token)
+	tx := repo.DB.First(&data, param)
 	if tx.Error != nil {
-		return users.Core{}, tx.Error
+		return users.UserCore{}, tx.Error
 	}
 
-	return data.toCore(), nil
-}
+	teamList := repo.team()
 
-func (repo *dataUser) SelectAll(page, token int) ([]users.Core, error) {
-
-	limit := 5
-	offset := ((page - 1) * limit)
-	queryParam := repo.db.Limit(limit).Offset(offset)
-
-	var data []User
-
-	if page > 0 {
-		txA := queryParam.Find(&data).Order("name ASC")
-		if txA.Error != nil {
-			return nil, txA.Error
-		}
-	} else {
-		txB := repo.db.Find(&data).Order("name ASC")
-		if txB.Error != nil {
-			return nil, txB.Error
-		}
-	}
-
-	for _, v := range data {
-		if v.ID == uint(token) {
-			return toCoreList(data), nil
-		}
-	}
-
-	return nil, errors.New("you not have access")
-}
-
-func (repo *dataUser) UpdateData(data users.Core) int {
-
-	newData := fromCore(data)
-
-	tx := repo.db.Model(&User{}).Where("id = ? ", int(data.ID)).Updates(&newData)
-	if tx.Error != nil {
-		return -1
-	}
-
-	return int(tx.RowsAffected)
+	userId := data.toUserCore(teamList)
+	return userId, nil
 
 }
 
-func (repo *dataUser) DelData(id int) int {
+func (repo *userData) CreateData(data users.UserCore) (int, error) {
 
-	tx := repo.db.Unscoped().Where("id = ? ", id).Delete(&User{})
+	dataModel := ModelInsert(data)
+	tx := repo.DB.Create(&dataModel)
 	if tx.Error != nil {
-		return -1
+		return 0, tx.Error
 	}
 
-	return int(tx.RowsAffected)
+	return int(tx.RowsAffected), nil
+
 }
 
-func (repo *dataUser) InsertData(data users.Core) int {
+func (repo *userData) UpdateData(param int, dataUpdate users.UserCore) (int, error) {
 
-	var dataInsert = fromCore(data)
-	tx := repo.db.Create(&dataInsert)
-	if tx.Error != nil {
-		return -1
+	var data User
+	data.Name = dataUpdate.Name
+	data.Email = dataUpdate.Email
+	data.Password = dataUpdate.Password
+
+	var user User
+	user.ID = dataUpdate.ID
+	txUpdateId := repo.DB.Model(&user).Where("id = ?", param).Updates(data)
+	if txUpdateId.Error != nil {
+		return -1, txUpdateId.Error
 	}
 
-	return int(tx.RowsAffected)
+	var err error
+
+	return int(txUpdateId.RowsAffected), err
+
+}
+
+func (repo *userData) DelData(param int) (int, error) {
+
+	var data User
+	txDelId := repo.DB.Delete(&data, param)
+	if txDelId.Error != nil {
+		return -1, txDelId.Error
+	}
+
+	var team Team
+	tx := repo.DB.Where("user_id=?", param).Delete(&team)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+
+	return int(txDelId.RowsAffected), nil
+
 }
