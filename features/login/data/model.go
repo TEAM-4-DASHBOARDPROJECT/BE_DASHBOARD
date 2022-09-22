@@ -1,21 +1,24 @@
 package data
 
 import (
-	"gorm.io/gorm"
 	entity "immersiveProject/features/login/entity"
+
+	"gorm.io/gorm"
 )
 
-type User struct{
+type User struct {
 	gorm.Model
-	Name		string
-	Email		string
-	Password	string
+	Name     string
+	Email    string
+	Role     string
+	Password string
 }
 
 func ToCore(userModel User) entity.Login {
 	return entity.Login{
-		Id: userModel.ID,
-		Email: userModel.Email,
+		Id:       userModel.ID,
+		Role:     userModel.Role,
+		Email:    userModel.Email,
 		Password: userModel.Password,
 	}
 }

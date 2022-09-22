@@ -62,10 +62,6 @@ func (service *userService) PostData(data users.UserCore) (int, error) {
 
 func (service *userService) PutData(param, token int, data users.UserCore) (int, error) {
 
-	if param != token {
-		return -1, errors.New("not have access")
-	}
-
 	row, err := service.dataUser.UpdateData(param, data)
 	if err != nil || row == 0 {
 		return -1, err
@@ -75,13 +71,9 @@ func (service *userService) PutData(param, token int, data users.UserCore) (int,
 
 }
 
-func (service *userService) DeleteData(param, token int) (int, error) {
+func (service *userService) DeleteData(id int) (int, error) {
 
-	if param != token {
-		return -1, errors.New("not have access")
-	}
-
-	_, err := service.dataUser.DelData(param)
+	_, err := service.dataUser.DelData(id)
 	if err != nil {
 		return -1, err
 	}
