@@ -10,7 +10,6 @@ type Mentee struct {
 	gorm.Model
 	FullName          string
 	ClassID           uint
-	ClassName         string
 	Status            string
 	Address           string
 	HomeAddress       string
@@ -29,15 +28,14 @@ type Mentee struct {
 
 type Class struct {
 	gorm.Model
-	Name   string
-	Mentee []Mentee
+	Name    string
+	Mentees []Mentee
 }
 
 func fromCore(data mentee.Core) Mentee {
 	dataModel := Mentee{
 		FullName:          data.FullName,
 		ClassID:           data.ClassID,
-		ClassName:         data.ClassName,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
@@ -60,7 +58,7 @@ func (data *Mentee) toCore() mentee.Core {
 		ID:                data.ID,
 		FullName:          data.FullName,
 		ClassID:           data.ClassID,
-		ClassName:         data.ClassName,
+		ClassName:         data.Class.Name,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,
