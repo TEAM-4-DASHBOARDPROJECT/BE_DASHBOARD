@@ -47,12 +47,12 @@ func CheckFileSize(size int64, contentType string) error {
 		return fmt.Errorf("ilegal file size or size 0 data")
 	}
 	if contentType == config.ContentImage{
-		if size > 153600 {
+		if size > 1097152 {
 			return fmt.Errorf("file size maks 15 mb")
 		}
 	}
 	if contentType == config.ContentDocuments{
-		if size > 153600 {
+		if size > 10097152 {
 			return fmt.Errorf("file size maks 15 mb")
 		}
 	}
