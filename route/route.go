@@ -4,7 +4,7 @@ import (
 	"immersiveProject/config"
 	"immersiveProject/middlewares"
 
-	"github.com/aws/aws-sdk-go/aws/session"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
@@ -56,7 +56,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 	logRepo := logrepo.New(db)
 	logUsecase := logusecase.New(logRepo)
-	logHandler := loghandler.New(logUsecase, &session.Session{})
+	logHandler := loghandler.New(logUsecase)
 
 	/*  Route
 	 */

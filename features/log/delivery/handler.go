@@ -22,10 +22,11 @@ type loghandler struct {
 	conn		*session.Session
 }
 
-func New(log entity.InterfaceLog, aws *session.Session) *loghandler {
+func New(log entity.InterfaceLog) *loghandler {
+	aws := &session.Session{}
 	return &loghandler{
 		LogInterface: log,
-		conn: aws,
+		conn: 	aws,
 	}
 }
 
@@ -56,6 +57,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	}
 	link := helper.DoUpload(handler.conn, *file, file.Filename)
 	logs.File = link
+
 	if err != nil{
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
 	}
