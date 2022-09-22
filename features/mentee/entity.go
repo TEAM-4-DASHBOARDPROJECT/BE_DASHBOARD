@@ -4,6 +4,7 @@ type Core struct {
 	ID                uint
 	FullName          string
 	ClassID           uint
+	ClassName         string
 	Status            string
 	Address           string
 	HomeAddress       string
