@@ -56,7 +56,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 
 	logRepo := logrepo.New(db)
 	logUsecase := logusecase.New(logRepo)
-	logHandler := loghandler.New(logUsecase, session.New())
+	logHandler := loghandler.New(logUsecase, &session.Session{})
 
 	/*  Route
 	 */

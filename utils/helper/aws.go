@@ -51,6 +51,6 @@ func DoUpload(sess *session.Session, file multipart.FileHeader, filename string)
 		log.Info(res)
 		log.Error("Upload error : ", err)
 	}
-	link := fmt.Sprint("https://bedashboard.s3.ap-southeast-1.amazonaws.com/", filename)
+	link := fmt.Sprint("https://bedashboard.s3.us-east-1.amazonaws.com/", filename)
 	return link
 }
