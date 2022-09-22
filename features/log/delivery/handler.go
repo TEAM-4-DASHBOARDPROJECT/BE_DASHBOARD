@@ -1,13 +1,13 @@
 package delivery
 
 import (
-	"immersiveProject/config"
+	// "immersiveProject/config"
 	"immersiveProject/features/log/entity"
+	// "immersiveProject/features/users/data"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
+	"log"
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -35,45 +35,63 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	if logToken == 0 || errToken != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
 	}
+	var logs LogResponse
+	bind := c.Bind(&logs)
 
-    logs := LogRequest{}
-    errBind := c.Bind(&logs)
-    if errBind != nil {
-        return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
-    }
+	if bind != nil {
+		log.Print("fail bind")
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
+	}
 
-    fileData, fileInfo, fileErr := c.Request().FormFile("file")
-    if fileErr == http.ErrMissingFile || fileErr != nil {
-        return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get file"))
-    }
-
-    fileExtension, errFileExtention := helper.CheckfileExtension(fileInfo.Filename, config.ContentDocuments)
-    if errFileExtention != nil {
-        return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file extension error"))
-    }
-
-    errFileSize := helper.CheckFileSize(fileInfo.Size, config.ContentDocuments)
-    if errFileSize != nil {
-        return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
-    }
-
-    filename := strconv.Itoa(logToken) + "" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
-    file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
-
-    if errUploadFile != nil {
-        return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
-    }
-
-    logsCore := toCoreRequest(logs)
-    logsCore.LogID = logToken
-    logsCore.File = file
-
-    _, err := handler.LogInterface.CreateLog(logsCore)
-    if err != nil {
-        return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
-    }
-    return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Println(err)
+	}
+	return c.JSON(http.StatusCreated, helper.SuccessDataResponseHelper("succses create log", file))
 }
+
+// logToken, errToken := middlewares.ExtractToken(c)
+// 	if logToken == 0 || errToken != nil {
+// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
+// 	}
+
+//     logs := LogRequest{}
+//     errBind := c.Bind(&logs)
+//     if errBind != nil {
+//         return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
+//     }
+
+//     fileData, fileInfo, fileErr := c.Request().FormFile("file")
+//     if fileErr == http.ErrMissingFile || fileErr != nil {
+//         return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get file"))
+//     }
+
+//     fileExtension, errFileExtention := helper.CheckfileExtension(fileInfo.Filename, config.ContentDocuments)
+//     if errFileExtention != nil {
+//         return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file extension error"))
+//     }
+
+//     errFileSize := helper.CheckFileSize(fileInfo.Size, config.ContentDocuments)
+//     if errFileSize != nil {
+//         return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
+//     }
+
+//     filename := strconv.Itoa(logToken) + "" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
+//     file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
+
+//     if errUploadFile != nil {
+//         return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
+//     }
+
+//     logsCore := toCoreRequest(logs)
+//     logsCore.LogID = logToken
+//     logsCore.File = file
+
+//     _, err := handler.LogInterface.CreateLog(logsCore)
+//     if err != nil {
+//         return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
+//     }
+//     return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
 
 // var response LogResponse
 	// var fileType, fileName string
