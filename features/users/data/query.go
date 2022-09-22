@@ -79,13 +79,15 @@ func (repo *dataUser) DelData(id int) int {
 	return int(tx.RowsAffected)
 }
 
-func (repo *dataUser) InsertData(input users.Core) int {
-
-	var dataInsert = fromCore(input)
-	tx := repo.db.Create(&dataInsert)
+func (repo *dataUser) InsertData(input users.Core) (int, error) {
+	UserModel := fromCore(input)
+	tx := repo.db.Create(&UserModel)
 	if tx.Error != nil {
-		return -1
+		return 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return 0, errors.New("failed to insert data")
 	}
 
-	return int(tx.RowsAffected)
+	return int(tx.RowsAffected), nil
 }

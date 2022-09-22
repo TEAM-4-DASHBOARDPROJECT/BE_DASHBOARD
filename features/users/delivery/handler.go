@@ -22,7 +22,7 @@ func New(e *echo.Echo, data users.UsecaseInterface) {
 	e.GET("/users/me", handler.MyProfile, middlewares.JWTMiddleware())
 	e.PUT("/users", handler.PutDataUser, middlewares.JWTMiddleware())
 	e.DELETE("/manager/:id", handler.DeleteDataUser, middlewares.JWTMiddleware())
-	e.POST("/manager", handler.PostDataUser) //<<=== Sementara tidak pakai token dulu
+	e.POST("/manager", handler.PostDataUser, middlewares.JWTMiddleware())  //<<=== Sementara tidak pakai token dulu
 
 }
 
@@ -121,19 +121,19 @@ func (delivery *userDelivery) DeleteDataUser(c echo.Context) error {
 }
 
 func (delivery *userDelivery) PostDataUser(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if idToken == 0 || errToken != nil{
+		return c.JSON(400, helper.FailedResponseHelper("not have access"))
+	}
 
 	var data Request
-	err := c.Bind(&data)
-	if err != nil || data.ID != 0 {
+	errBind := c.Bind(&data)
+	data.ID = uint(idToken)
+	if errBind != nil{
 		return c.JSON(400, helper.FailedResponseHelper("error bindig data"))
 	}
 
-	// idToken, _ := middlewares.ExtractToken(c)
-	// if idToken != 1 {
-	// 	return c.JSON(400, helper.FailedResponseHelper("not have access"))
-	// }
-
-	row := delivery.userUsecase.PostData(data.toCoreReq())
+	_, err := delivery.userUsecase.PostData(data.toCoreReq)
 	if row == -1 || row == 0 {
 		return c.JSON(400, helper.FailedResponseHelper("failed insert data"))
 	}

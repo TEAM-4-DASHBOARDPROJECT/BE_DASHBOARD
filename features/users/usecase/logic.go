@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"immersiveProject/features/users"
 
 	"golang.org/x/crypto/bcrypt"
@@ -62,19 +63,23 @@ func (usecase *userUsecase) DeleteData(id int) int {
 	return row
 }
 
-func (usecase *userUsecase) PostData(data users.Core) int {
+func (usecase *userUsecase) PostData(data users.Core) (int, error) {
 
 	if data.Password == "" || data.Email == "" || data.Name == "" || data.Role == "" || data.TeamID == 0 {
-		return -1
+		return -1, errors.New("all data must be filled")
 	}
 
-	hash, _ := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
+	passWillBcrypt := []byte(data.Password)
+	hash, err_hash := bcrypt.GenerateFromPassword(passWillBcrypt, bcrypt.DefaultCost)
+	if err_hash != nil {
+		return -2, errors.New("hashing password failed")
+	}
+
 	data.Password = string(hash)
-
-	row := usecase.userData.InsertData(data)
-	if row == -1 {
-		return -1
+	result, err := usecase.userData.InsertData(data)
+	if err != nil {
+		return 0, errors.New("failed to insert data")
 	}
 
-	return row
+	return result, nil
 }

@@ -31,7 +31,7 @@ func (data *User) toCore() users.Core {
 		Password: data.Password,
 		Role:     data.Role,
 		Status:   data.Status,
-		Team: users.Team{
+		Team: 		users.Team{
 			ID:   int(data.TeamID),
 			Name: data.Team.Name,
 		},
