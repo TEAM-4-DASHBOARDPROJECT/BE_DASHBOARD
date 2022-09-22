@@ -30,7 +30,7 @@ func (usecase *menteeUsecase) PutMentee(id int, newData mentee.Core) (int, error
 	return row, nil
 }
 
-func (usecase *menteeUsecase) GetMentee(class string, status string, category string) ([]mentee.Core, error) {
+func (usecase *menteeUsecase) GetMentee(class int, status string, category string) ([]mentee.Core, error) {
 	data, err := usecase.menteeData.SelectMentee(class, status, category)
 	if err != nil {
 		return nil, err

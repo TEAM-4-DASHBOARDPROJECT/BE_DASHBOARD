@@ -73,11 +73,11 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 	query2 := c.QueryParam("status")
 	query3 := c.QueryParam("category")
 
-	// idClass, err := strconv.Atoi(query)
-	// if err != nil {
-	// 	return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
-	// }
-	// classID := idClass
+	idClass, err := strconv.Atoi(query)
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("query param must be number"))
+	}
+	classID := idClass
 
 	// idStatus, err := strconv.Atoi(query2)
 	// if err != nil {
@@ -85,7 +85,7 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 	// }
 	// statusID := idStatus
 
-	data, errGet := delivery.menteeUsecase.GetMentee(query, query2, query3)
+	data, errGet := delivery.menteeUsecase.GetMentee(classID, query2, query3)
 	if errGet != nil {
 		return c.JSON(400, helper.FailedResponseHelper("error get all data"))
 	} else if len(data) == 0 {

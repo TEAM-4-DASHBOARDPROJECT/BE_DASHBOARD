@@ -28,8 +28,8 @@ type Mentee struct {
 
 type Class struct {
 	gorm.Model
-	Name   string
-	Mentee []Mentee
+	Name    string
+	Mentees []Mentee
 }
 
 func fromCore(data mentee.Core) Mentee {
@@ -57,6 +57,8 @@ func (data *Mentee) toCore() mentee.Core {
 	return mentee.Core{
 		ID:                data.ID,
 		FullName:          data.FullName,
+		ClassID:           data.ClassID,
+		ClassName:         data.Class.Name,
 		Status:            data.Status,
 		Address:           data.Address,
 		HomeAddress:       data.HomeAddress,

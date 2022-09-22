@@ -6,19 +6,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type Log struct{
+type Log struct {
 	gorm.Model
-	UserID		uint
-	MenteeID	uint
-	Feedback	string
-	Status		string
-	UrlFile		string
-	UrlImage	string
-	User		User
-	Mentee		Mentee
+	UserID   uint
+	MenteeID uint
+	Feedback string
+	Status   string
+	UrlFile  string
+	UrlImage string
+	User     User
+	Mentee   Mentee
 }
 
-type User struct{
+type User struct {
 	gorm.Model
 	Name     string
 	Email    string `gorm:"unique"`
@@ -26,11 +26,10 @@ type User struct{
 	Team     string
 	Role     string
 	Status   string
-
 	Log		[]Log
 }
 
-type Mentee struct{
+type Mentee struct {
 	gorm.Model
 	UserID				uint
 	MenteeID			uint
@@ -47,27 +46,26 @@ type Mentee struct{
 	EducationCategory 	string
 	EducationMajor    	string
 	EducationGraduate 	string
-
 	Log					[]Log
 }
 
 func FromCore(logCore entity.Log) Log {
 	logModel := Log{
-		Feedback: 	logCore.Feedback,
-		Status: 	logCore.Status,
-		UrlFile: 	logCore.UrlFile,
-		UrlImage: 	logCore.UrlImage,
+		Feedback: logCore.Feedback,
+		Status:   logCore.Status,
+		UrlFile:  logCore.UrlFile,
+		UrlImage: logCore.UrlImage,
 	}
 	return logModel
 }
 
-func (logCore *Log) ToCore()entity.Log {
+func (logCore *Log) ToCore() entity.Log {
 	return entity.Log{
-		LogID: 		int(logCore.ID),
-		Feedback: 	logCore.Feedback,
-		Status: 	logCore.Status,
-		UrlFile: 	logCore.UrlFile,
-		UrlImage: 	logCore.UrlImage,
+		LogID:    int(logCore.ID),
+		Feedback: logCore.Feedback,
+		Status:   logCore.Status,
+		UrlFile:  logCore.UrlFile,
+		UrlImage: logCore.UrlImage,
 	}
 }
 
