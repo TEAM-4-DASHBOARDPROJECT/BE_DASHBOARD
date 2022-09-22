@@ -1,27 +1,46 @@
 package users
 
-type Core struct {
-	ID       uint
-	Name     string
-	Email    string
-	Password string
-	Team     string
-	Role     string
-	Status   string
+import (
+	"time"
+)
+
+type UserCore struct {
+	ID        uint
+	Name      string
+	Email     string
+	Password  string
+	Status    string
+	Role      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
+	Team      []TeamCore
+}
+
+type TeamCore struct {
+	ID   uint
+	Name string
+	// Author    string
+	// Publisher string
+	// Page      int
+	CreatedAt time.Time
+	UserID    uint
+	UpdatedAt time.Time
+	DeletedAt time.Time
+}
+
+type ServiceInterface interface {
+	GetAll(token int) (data []UserCore, err error)
+	GetById(param, token int) (data UserCore, err error)
+	PostData(data UserCore) (int, error)
+	PutData(param, token int, data UserCore) (int, error)
+	DeleteData(param, token int) (int, error)
 }
 
 type DataInterface interface {
-	GetMyProfile(token int) (Core, error)
-	SelectAll(page, token int) ([]Core, error)
-	UpdateData(data Core) int
-	DelData(id int) int
-	InsertData(data Core) int
-}
-
-type UsecaseInterface interface {
-	SelectMe(token int) (Core, error)
-	GetAll(page, token int) ([]Core, error)
-	PutData(data Core) int
-	DeleteData(id int) int
-	PostData(data Core) int
+	SelectAll(token int) (data []UserCore, err error)
+	SelectById(param, token int) (data UserCore, err error)
+	CreateData(data UserCore) (int, error)
+	UpdateData(param int, data UserCore) (int, error)
+	DelData(param int) (int, error)
 }

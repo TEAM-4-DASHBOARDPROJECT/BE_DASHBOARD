@@ -2,24 +2,27 @@ package teams
 
 import "time"
 
-type Core struct {
+type TeamCore struct {
 	ID        uint
 	Name      string
-	UserID    uint
 	CreatedAt time.Time
-	UpdateAt  time.Time
-	DeleteAt  time.Time
+	UserID    uint
+	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 
-type RepoTeam interface {
-	Insert(data Core) (affectedRow int, err error)
-	Update(data Core) (affectedRow int, err error)
-	Delete(data Core) (affectedRow int, err error)
-	FindAll() (result []Core, err error)
+type DataInterface interface {
+	SelectAll() (data []TeamCore, err error)
+	SelectById(param int) (data TeamCore, err error)
+	CreateData(data TeamCore, token int) (int, error)
+	UpdateData(param, token int, data TeamCore) (int, error)
+	DelData(param, token int) (int, error)
 }
-type UsecaseTeam interface {
-	Create(data Core) (err error)
-	Update(data Core) (err error)
-	Delete(data Core) (err error)
-	GetTeam() (result []Core, err error)
+
+type ServiceInterface interface {
+	GetAll() (data []TeamCore, err error)
+	GetById(param int) (data TeamCore, err error)
+	PostData(data TeamCore, token int) (int, error)
+	PutData(param, token int, data TeamCore) (int, error)
+	DeleteData(param, token int) (int, error)
 }
