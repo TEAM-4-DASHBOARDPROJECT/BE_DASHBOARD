@@ -18,6 +18,16 @@ func New(db *gorm.DB) entity.InterfaceLog {
 	}
 }
 
+func (repo *LogRepo) FindLog() ([]entity.Log, error) {
+	var logModels  []data.Log
+	tx := repo.db.Find(&logModels)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	Logs := data.CoreList(logModels)
+	return Logs, nil
+}
+
 func (repo *LogRepo) CreateLog(logCreate entity.Log)  (int, error){
 	LogModel := data.FromCore(logCreate)
 	tx := repo.db.Create(&LogModel)

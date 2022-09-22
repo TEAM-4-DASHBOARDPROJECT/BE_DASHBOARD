@@ -26,6 +26,8 @@ type User struct{
 	Team     string
 	Role     string
 	Status   string
+
+	Log		[]Log
 }
 
 type Mentee struct{
@@ -45,6 +47,8 @@ type Mentee struct{
 	EducationCategory 	string
 	EducationMajor    	string
 	EducationGraduate 	string
+
+	Log					[]Log
 }
 
 func FromCore(logCore entity.Log) Log {
