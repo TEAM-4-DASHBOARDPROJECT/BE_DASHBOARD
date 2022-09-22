@@ -6,7 +6,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 )
-type loginUsecase struct{
+
+type loginUsecase struct {
 	repo entity.UserInterface
 }
 
@@ -16,7 +17,7 @@ func New(repo entity.UserInterface) *loginUsecase {
 	}
 }
 
-func (login *loginUsecase) Login(userData entity.Login) (token string, err error){
+func (login *loginUsecase) Login(userData entity.Login) (token string, err error) {
 	result, err := login.repo.SelectUserByEmail(userData.Email)
 
 	if err != nil {
@@ -28,5 +29,5 @@ func (login *loginUsecase) Login(userData entity.Login) (token string, err error
 		return token, err
 	}
 
-	return middlewares.CreateToken(int(result.Id))
+	return middlewares.CreateToken(int(result.Id), result.Role)
 }

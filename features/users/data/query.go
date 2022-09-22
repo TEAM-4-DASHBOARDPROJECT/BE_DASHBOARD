@@ -111,20 +111,14 @@ func (repo *userData) UpdateData(param int, dataUpdate users.UserCore) (int, err
 
 }
 
-func (repo *userData) DelData(param int) (int, error) {
+func (repo *userData) DelData(id int) (int, error) {
 
 	var data User
-	txDelId := repo.DB.Delete(&data, param)
+	txDelId := repo.DB.Where("id = ?", id).Delete(&data)
 	if txDelId.Error != nil {
 		return -1, txDelId.Error
 	}
 
-	var team Team
-	tx := repo.DB.Where("user_id=?", param).Delete(&team)
-	if tx.Error != nil {
-		return -1, tx.Error
-	}
-
-	return int(txDelId.RowsAffected), nil
+	return 1, nil
 
 }

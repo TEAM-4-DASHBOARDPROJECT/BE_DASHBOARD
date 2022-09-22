@@ -19,7 +19,6 @@ func ToCore(req UserReq) users.UserCore {
 		Password: req.Password,
 		Status:   req.Status,
 		Role:     req.Role,
-		// Team:     req.Team,
 	}
 
 }
