@@ -1,18 +1,20 @@
 package entity
 
-import "time"
-
-type Log struct{
-	LogID			int
-	Feedback		string
-	Status			string
-	UrlFile			string
-	UrlImage		string
-	CreatedAt		time.Time
-	UpdatedAt		time.Time
+type Log struct {
+	LogID             int
+	Feedback          string
+	StatusLog         string
+	File              string
+	MenteeName        string
+	Class             string
+	EducationMajor    string
+	EducationGraduate string
+	Email             string
+	Telegram          string
+	Phone             string
 }
 
-type Mentee struct{
+type Mentee struct {
 	ID                uint
 	FullName          string
 	ClassID           uint
@@ -29,14 +31,15 @@ type Mentee struct{
 	EducationCategory string
 	EducationMajor    string
 	EducationGraduate string
+	Log               []Log
 }
 
-type UsecaseLog	interface{
-	InsertLog(logInsert Log)(row int, err error)
+type UsecaseLog interface {
+	InsertLog(logInsert Log) (row int, err error)
 	GetLog() (logInsert []Log, err error)
 }
 
-type InterfaceLog interface{
+type InterfaceLog interface {
 	FindLog() (logInsert []Log, err error)
-	CreateLog(logInsert Log)(row int, err error)
+	CreateLog(logInsert Log) (row int, err error)
 }

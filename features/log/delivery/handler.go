@@ -3,7 +3,6 @@ package delivery
 import (
 	"immersiveProject/config"
 	"immersiveProject/features/log/entity"
-	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
 	"net/http"
 	"strconv"
@@ -12,8 +11,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type loghandler struct{
-	LogInterface	entity.InterfaceLog
+type loghandler struct {
+	LogInterface entity.InterfaceLog
 }
 
 func New(log entity.InterfaceLog) *loghandler {
@@ -31,29 +30,25 @@ func (handler *loghandler) FindLog(c echo.Context) error {
 }
 
 func (handler *loghandler) Createlog(c echo.Context) error {
-	logToken, errToken := middlewares.ExtractToken(c)
-	if logToken == 0 || errToken != nil{
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("token invalid !"))
-	}
 
 	logs := LogRequest{}
 	errBind := c.Bind(&logs)
-	if errBind != nil{
+	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
 	}
 
-	imageData, imageInfo, imageErr := c.Request().FormFile("urlimage")
+	imageData, imageInfo, imageErr := c.Request().FormFile("file")
 	if imageErr == http.ErrMissingFile || imageErr != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get image"))
 	}
 
 	imageExtension, errImageExtension := helper.CheckfileExtension(imageInfo.Filename, config.ContentImage)
-	if errImageExtension != nil{
+	if errImageExtension != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("image extension error"))
 	}
 
 	errImageSize := helper.CheckFileSize(imageInfo.Size, config.ContentImage)
-	if errImageSize != nil{
+	if errImageSize != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("image size error"))
 	}
 
@@ -86,7 +81,6 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
 	}
 
-	
 	logsCore := toCoreRequest(logs)
 	logsCore.LogID = logToken
 	logsCore.UrlFile = file

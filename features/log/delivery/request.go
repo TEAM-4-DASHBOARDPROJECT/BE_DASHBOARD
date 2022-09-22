@@ -2,27 +2,24 @@ package delivery
 
 import "immersiveProject/features/log/entity"
 
-type LogRequest struct{
-	Feedback	string	`json:"feedback" form:"feedback"`
-	Status		string	`json:"status" form:"status"`
-	UrlFile		string	`json:"urlfile" form:"urlfile"`
-	UrlImage	string	`json:"urlimage" form:"urlimage"`
+type LogRequest struct {
+	Feedback  string `json:"feedback" form:"feedback"`
+	StatusLog string `json:"statuslog" form:"statuslog"`
+	File      string `json:"file" form:"file"`
 }
 
 func FromCoreRequest(logData LogRequest) entity.Log {
 	return entity.Log{
-		Feedback: 	logData.Feedback,
-		Status: 	logData.Status,
-		UrlFile: 	logData.UrlFile,
-		UrlImage:	logData.UrlImage,
+		Feedback:  logData.Feedback,
+		StatusLog: logData.StatusLog,
+		File:      logData.File,
 	}
 }
 
 func toCoreRequest(logData LogRequest) entity.Log {
 	return entity.Log{
-		Feedback: 	logData.Feedback,
-		Status: 	logData.Status,
-		UrlFile: 	logData.UrlFile,
-		UrlImage: 	logData.UrlImage,
+		Feedback:  logData.Feedback,
+		StatusLog: logData.StatusLog,
+		File:      logData.File,
 	}
 }
