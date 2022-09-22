@@ -1,12 +1,13 @@
 package delivery
 
 import (
-	"immersiveProject/config"
+	// "immersiveProject/config"
 	"immersiveProject/features/log/entity"
+	// "immersiveProject/features/mentee/delivery"
 	"immersiveProject/utils/helper"
 	"net/http"
-	"strconv"
-	"time"
+	// "strconv"
+	// "time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -30,65 +31,6 @@ func (handler *loghandler) FindLog(c echo.Context) error {
 }
 
 func (handler *loghandler) Createlog(c echo.Context) error {
-
-	logs := LogRequest{}
-	errBind := c.Bind(&logs)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
-	}
-
-	imageData, imageInfo, imageErr := c.Request().FormFile("file")
-	if imageErr == http.ErrMissingFile || imageErr != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get image"))
-	}
-
-	imageExtension, errImageExtension := helper.CheckfileExtension(imageInfo.Filename, config.ContentImage)
-	if errImageExtension != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("image extension error"))
-	}
-
-	errImageSize := helper.CheckFileSize(imageInfo.Size, config.ContentImage)
-	if errImageSize != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("image size error"))
-	}
-
-	imageName := strconv.Itoa(logToken) + "_" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + imageExtension
-	image, errUploadImage := helper.UploadFileToS3(config.LogsImages, imageName, config.ContentImage, imageData)
-
-	if errUploadImage != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
-	}
-
-	fileData, fileInfo, fileErr := c.Request().FormFile("urlfile")
-	if fileErr == http.ErrMissingFile || fileErr != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get file"))
-	}
-
-	fileExtension, errFileExtention := helper.CheckfileExtension(fileInfo.Filename, config.ContentDocuments)
-	if errFileExtention != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file extension error"))
-	}
-
-	errFileSize := helper.CheckFileSize(fileInfo.Size, config.ContentDocuments)
-	if errFileSize != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
-	}
-
-	filename := strconv.Itoa(logToken) + "_" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
-	file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
-
-	if errUploadFile != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
-	}
-
-	logsCore := toCoreRequest(logs)
-	logsCore.LogID = logToken
-	logsCore.UrlFile = file
-	logsCore.UrlImage = image
-
-	_, err := handler.LogInterface.CreateLog(logsCore)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
-	}
-	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
+	// var response 
+	return nil
 }
