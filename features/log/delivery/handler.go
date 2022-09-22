@@ -17,13 +17,11 @@ import (
 
 type loghandler struct {
 	LogInterface entity.InterfaceLog
-	conn         *session.Session
 }
 
 func New(log entity.InterfaceLog, aws *session.Session) *loghandler {
 	return &loghandler{
 		LogInterface: log,
-		conn:         aws,
 	}
 }
 
