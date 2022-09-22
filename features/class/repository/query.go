@@ -35,6 +35,7 @@ func (repo *classRepo) Insert(class entity.ClassEntity) (affectedRow int, err er
 }
 
 func (repo *classRepo) DeleteData(id int) (row int, err error) {
+
 	classModel := data.Class{}
 
 	tx := repo.db.Where("id = ?", id).Delete(&classModel)

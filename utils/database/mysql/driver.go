@@ -28,9 +28,9 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 
 func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
+		new(_teamsModel.Team),
 		new(_userModel.User),
 		new(classModel.Class),
 		new(menteeModel.Mentee),
-		new(_teamsModel.Team),
 	)
 }
