@@ -9,16 +9,20 @@ import (
 	"log"
 	"net/http"
 
+	// "github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type loghandler struct {
 	LogInterface entity.InterfaceLog
+	conn		*session.Session
 }
 
-func New(log entity.InterfaceLog) *loghandler {
+func New(log entity.InterfaceLog, aws *session.Session) *loghandler {
 	return &loghandler{
 		LogInterface: log,
+		conn: 		aws,
 	}
 }
 
@@ -47,7 +51,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 	}
-	return c.JSON(http.StatusCreated, helper.SuccessDataResponseHelper("succses create log", file))
+	return c.JSON(http.StatusOK, helper.DoUpload(handler.conn, *file, file.Filename))
 }
 
 // logToken, errToken := middlewares.ExtractToken(c)
