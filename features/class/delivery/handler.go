@@ -5,11 +5,12 @@ import (
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-type classhandler struct{
+type classhandler struct {
 	Usecase entity.UsecaseClass
 }
 
@@ -42,47 +43,48 @@ func (repo *classhandler) Create(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("Succses Create Class"))
 }
 
-func (repo *classhandler) Update(c echo.Context) error {
-	userToken, errToken := middlewares.ExtractToken(c)
-	if userToken == 0 || errToken != nil{
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("token tuan !"))
+func (repo *classhandler) UpdateClass(c echo.Context) error {
+
+	id := c.Param("id")
+	idCnv, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
 	}
+
 	var classUpdate ClassRequest
-
 	errBind := c.Bind(&classUpdate)
-	classUpdate.ClassID = userToken
 	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("bind nya gagal lur"))
+		return c.JSON(400, helper.FailedResponseHelper("error bind data"))
 	}
 
-	result, err := repo.Usecase.Update(RequestToEntity(classUpdate))
+	result, err := repo.Usecase.UpdateClass(idCnv, RequestToEntity(classUpdate))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("update nya gagal lur"))
+		return c.JSON(500, helper.FailedResponseHelper("failed update class"))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Berhasil update class selamat", result))
+	return c.JSON(200, helper.SuccessDataResponseHelper("success update class", result))
 }
 
-func (repo *classhandler) Delete(c echo.Context) error{
-	userToken, errToken := middlewares.ExtractToken(c)
-	if userToken == 0 || errToken != nil{
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("tolong tokennya tuan!"))
-	}
-	var classRemove ClassRequest
-	classRemove.ClassID = userToken
-	result, err := repo.Usecase.Delete(RequestToEntity(classRemove))
+func (repo *classhandler) DeleteClass(c echo.Context) error {
+
+	id := c.Param("id")
+	idCnv, err := strconv.Atoi(id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("gagal delete usernya"))
+		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("delete berhasil",result))
+
+	row, err := repo.Usecase.DeleteClass(idCnv)
+	if err != nil || row != 1 {
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed delete class"))
+	}
+	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("success delete class"))
 }
 
-
-func (repo *classhandler) GetClass(c echo.Context) error{
+func (repo *classhandler) GetClass(c echo.Context) error {
 	result, err := repo.Usecase.GetClass()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("failed get class"))
 	}
-	
+
 	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses get class", EntityList(result)))
 }
 

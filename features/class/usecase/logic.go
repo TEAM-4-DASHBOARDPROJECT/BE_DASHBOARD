@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"errors"
 	"immersiveProject/features/class/entity"
 )
 
@@ -25,7 +24,7 @@ func (usecase *classUsecase) Create(class entity.ClassEntity) (err error) {
 	return nil
 }
 
-func (usecase *classUsecase) Update(class entity.ClassEntity) (row int, err error) {
+func (usecase *classUsecase) UpdateClass(id int, class entity.ClassEntity) (row int, err error) {
 	classMap := make(map[string]interface{})
 	if class.Name != "" {
 		classMap["name"] = &class.Name
@@ -40,21 +39,19 @@ func (usecase *classUsecase) Update(class entity.ClassEntity) (row int, err erro
 		classMap["akhir"] = &class.AkhirKelas
 	}
 
-	result, err := usecase.Repo.Update(class)
+	result, err := usecase.Repo.UpdateData(id, class)
 	if err != nil {
-		return 0, errors.New("user already register? you can't update if your account not listed")
+		return -1, err
 	}
-	return result, err
+	return result, nil
 }
 
-func (usecase *classUsecase) Delete(class entity.ClassEntity) (row int, err error) {
-	result, err := usecase.Repo.Delete(class)
-
+func (usecase *classUsecase) DeleteClass(id int) (row int, err error) {
+	result, err := usecase.Repo.DeleteData(id)
 	if err != nil {
-		return -1, errors.New("what you delete? register account first and then try again delete account")
+		return -1, err
 	}
-
-	return result, err
+	return result, nil
 }
 
 func (usecase *classUsecase) GetClass() ([]entity.ClassEntity, error) {
