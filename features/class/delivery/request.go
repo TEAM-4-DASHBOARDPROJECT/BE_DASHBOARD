@@ -12,11 +12,11 @@ type ClassRequest struct{
 
 func RequestToEntity(request ClassRequest) entity.ClassEntity {
 	return entity.ClassEntity{
-		ClassID: 	uint(request.ClassID),
-		Name: 		request.Name,
-		JumlahKelas: request.JumlahKelas,
-		MulaiKelas: request.MulaiKelas,
-		AkhirKelas: request.AkhirKelas,
+		ClassID: 		uint(request.ClassID),
+		Name: 			request.Name,
+		JumlahKelas: 	request.JumlahKelas,
+		MulaiKelas: 	request.MulaiKelas,
+		AkhirKelas: 	request.AkhirKelas,
 	}
 }
 
