@@ -7,6 +7,7 @@ type Log struct{
 	Feedback		string
 	Status			string
 	UrlFile			string
+	UrlImage		string
 	CreatedAt		time.Time
 	UpdatedAt		time.Time
 }

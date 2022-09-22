@@ -3,7 +3,7 @@ package delivery
 import "immersiveProject/features/class/entity"
 
 type ClassRequest struct{
-	ClassID		int		`json:"id" form: "id"`
+	ClassID		int		`json:"id" form:"id"`
 	Name		string	`json:"name" form:"name"`
 	JumlahKelas	string	`json:"jumlah" form:"jumlah"`
 	MulaiKelas	string	`json:"mulai" form:"mulai"`

@@ -13,6 +13,7 @@ type Log struct{
 	Feedback	string
 	Status		string
 	UrlFile		string
+	UrlImage	string
 	User		User
 	Mentee		Mentee
 }
@@ -51,6 +52,7 @@ func FromCore(logCore entity.Log) Log {
 		Feedback: 	logCore.Feedback,
 		Status: 	logCore.Status,
 		UrlFile: 	logCore.UrlFile,
+		UrlImage: 	logCore.UrlImage,
 	}
 	return logModel
 }
@@ -61,6 +63,7 @@ func (logCore *Log) ToCore()entity.Log {
 		Feedback: 	logCore.Feedback,
 		Status: 	logCore.Status,
 		UrlFile: 	logCore.UrlFile,
+		UrlImage: 	logCore.UrlImage,
 	}
 }
 

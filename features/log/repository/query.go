@@ -18,7 +18,7 @@ func New(db *gorm.DB) entity.InterfaceLog {
 	}
 }
 
-func (repo *LogRepo) CreateLog(logCreate entity.Log) (int, error){
+func (repo *LogRepo) CreateLog(logCreate entity.Log)  (int, error){
 	LogModel := data.FromCore(logCreate)
 	tx := repo.db.Create(&LogModel)
 	if tx.Error != nil {
