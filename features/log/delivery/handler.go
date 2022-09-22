@@ -57,7 +57,6 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	}
 
 	imageName := strconv.Itoa(logToken) + " " + "Feedback" + imageExtension
-
 	image, errUploadImage := helper.UploadFileToS3(config.LogsImages, imageName, config.ContentImage, imageData)
 
 	if errUploadImage != nil {

@@ -22,7 +22,7 @@ func New(e *echo.Echo, data users.UsecaseInterface) {
 	e.GET("/users/me", handler.MyProfile, middlewares.JWTMiddleware())
 	e.PUT("/users", handler.PutDataUser, middlewares.JWTMiddleware())
 	e.DELETE("/manager/:id", handler.DeleteDataUser, middlewares.JWTMiddleware())
-	e.POST("/manager", handler.PostDataUser, middlewares.JWTMiddleware()) //<<=== Sementara tidak pakai token dulu
+	e.POST("/manager", handler.PostDataUser) //<<=== Sementara tidak pakai token dulu
 
 }
 
@@ -80,12 +80,12 @@ func (delivery *userDelivery) PutDataUser(c echo.Context) error {
 	if updateRequest.Role != "" {
 		updateData.Role = updateRequest.Role
 	}
-	if updateRequest.Team != "" {
-		updateData.Team = updateRequest.Team
-	}
+	// if updateRequest.Team != "" {
+	// 	updateData.Team = updateRequest.Team
+	// }
 
 	if idToken != 1 {
-		if updateRequest.Role != "" || updateRequest.Team != "" || updateRequest.ID != uint(idToken) {
+		if updateRequest.Role != "" || updateRequest.TeamID != 0 || updateRequest.ID != uint(idToken) {
 			return c.JSON(400, helper.FailedResponseHelper("not have access"))
 		}
 	}
@@ -128,10 +128,10 @@ func (delivery *userDelivery) PostDataUser(c echo.Context) error {
 		return c.JSON(400, helper.FailedResponseHelper("error bindig data"))
 	}
 
-	idToken, _ := middlewares.ExtractToken(c)
-	if idToken != 1 {
-		return c.JSON(400, helper.FailedResponseHelper("not have access"))
-	}
+	// idToken, _ := middlewares.ExtractToken(c)
+	// if idToken != 1 {
+	// 	return c.JSON(400, helper.FailedResponseHelper("not have access"))
+	// }
 
 	row := delivery.userUsecase.PostData(data.toCoreReq())
 	if row == -1 || row == 0 {

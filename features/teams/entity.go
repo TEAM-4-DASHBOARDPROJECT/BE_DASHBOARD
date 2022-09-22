@@ -9,12 +9,6 @@ type Core struct {
 	CreatedAt time.Time
 	UpdateAt  time.Time
 	DeleteAt  time.Time
-	User      User
-}
-
-type User struct {
-	ID   uint
-	Name string
 }
 
 type RepoTeam interface {

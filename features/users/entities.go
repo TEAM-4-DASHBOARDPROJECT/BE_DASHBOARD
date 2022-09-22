@@ -1,13 +1,23 @@
 package users
 
+import "time"
+
 type Core struct {
-	ID       uint
-	Name     string
-	Email    string
-	Password string
-	Team     string
-	Role     string
-	Status   string
+	ID        uint
+	Name      string
+	Email     string
+	Password  string
+	TeamID    int
+	Role      string
+	Status    string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Team      Team
+}
+
+type Team struct {
+	ID   int
+	Name string
 }
 
 type DataInterface interface {
