@@ -62,7 +62,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	}
 
 	filename := strconv.Itoa(logToken) + "" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
-	file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
+	file, errUploadFile := helper.UploadFileToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
 
 	if errUploadFile != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload file"))
