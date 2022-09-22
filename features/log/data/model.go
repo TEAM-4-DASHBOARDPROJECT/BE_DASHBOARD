@@ -26,25 +26,27 @@ type User struct {
 	Team     string
 	Role     string
 	Status   string
+	Log		[]Log
 }
 
 type Mentee struct {
 	gorm.Model
-	UserID            uint
-	MenteeID          uint
-	Status            string
-	Address           string
-	HomeAddress       string
-	Email             string `gorm:"unique"`
-	Gender            string
-	Telegram          string
-	Phone             string
-	EmergencyName     string
-	EmergencyPhone    string
-	EmergencyStatus   string
-	EducationCategory string
-	EducationMajor    string
-	EducationGraduate string
+	UserID				uint
+	MenteeID			uint
+	Status            	string
+	Address           	string
+	HomeAddress       	string
+	Email             	string `gorm:"unique"`
+	Gender            	string
+	Telegram          	string
+	Phone             	string
+	EmergencyName     	string
+	EmergencyPhone    	string
+	EmergencyStatus   	string
+	EducationCategory 	string
+	EducationMajor    	string
+	EducationGraduate 	string
+	Log					[]Log
 }
 
 func FromCore(logCore entity.Log) Log {
