@@ -6,7 +6,7 @@ import (
 )
 
 type logLogic struct{
-	logData 	entity.UsecaseLog
+	logData entity.UsecaseLog
 }
 
 func New(logic entity.UsecaseLog) entity.UsecaseLog {
