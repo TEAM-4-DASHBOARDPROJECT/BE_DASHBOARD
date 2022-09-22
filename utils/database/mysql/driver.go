@@ -5,7 +5,6 @@ import (
 	"immersiveProject/config"
 	classModel "immersiveProject/features/class/data"
 	menteeModel "immersiveProject/features/mentee/data"
-	_teamsModel "immersiveProject/features/teams/data"
 	_userModel "immersiveProject/features/users/data"
 
 	"log"
@@ -31,6 +30,6 @@ func autoMigrate(db *gorm.DB) {
 		new(_userModel.User),
 		new(classModel.Class),
 		new(menteeModel.Mentee),
-		new(_teamsModel.Team),
+		// new(_teamsModel.Team),
 	)
 }

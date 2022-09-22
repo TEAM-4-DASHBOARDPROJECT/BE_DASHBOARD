@@ -7,9 +7,15 @@ type Response struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Team     string `json:"team"`
-	Role     string `json:"role"`
-	Status   string `json:"status"`
+	// TeamID     int `json:"team"`
+	Role   string `json:"role"`
+	Status string `json:"status"`
+	Team   Team
+}
+
+type Team struct {
+	ID   int
+	Name string
 }
 
 func toRespon(data users.Core) Response {
@@ -18,9 +24,13 @@ func toRespon(data users.Core) Response {
 		Name:     data.Name,
 		Email:    data.Email,
 		Password: data.Password,
-		Team:     data.Team,
-		Role:     data.Role,
-		Status:   data.Status,
+		// Team:     data.Team,
+		Role:   data.Role,
+		Status: data.Status,
+		Team: Team{
+			ID:   data.Team.ID,
+			Name: data.Team.Name,
+		},
 	}
 }
 

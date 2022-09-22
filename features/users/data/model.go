@@ -11,9 +11,16 @@ type User struct {
 	Name     string
 	Email    string `gorm:"unique"`
 	Password string
-	Team     string
+	TeamID   uint
 	Role     string
 	Status   string
+	Team     Team `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type Team struct {
+	gorm.Model
+	Name string
+	User []User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func (data *User) toCore() users.Core {
@@ -22,9 +29,12 @@ func (data *User) toCore() users.Core {
 		Name:     data.Name,
 		Email:    data.Email,
 		Password: data.Password,
-		Team:     data.Team,
 		Role:     data.Role,
 		Status:   data.Status,
+		Team: users.Team{
+			ID:   int(data.TeamID),
+			Name: data.Team.Name,
+		},
 	}
 }
 
@@ -42,8 +52,8 @@ func fromCore(data users.Core) User {
 		Name:     data.Name,
 		Email:    data.Email,
 		Password: data.Password,
-		Team:     data.Team,
 		Role:     data.Role,
 		Status:   data.Status,
+		TeamID:   uint(data.Team.ID),
 	}
 }

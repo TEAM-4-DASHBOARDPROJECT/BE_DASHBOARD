@@ -64,7 +64,7 @@ func (usecase *userUsecase) DeleteData(id int) int {
 
 func (usecase *userUsecase) PostData(data users.Core) int {
 
-	if data.Password == "" || data.Email == "" || data.Name == "" || data.Role == "" || data.Team == "" {
+	if data.Password == "" || data.Email == "" || data.Name == "" || data.Role == "" || data.TeamID == 0 {
 		return -1
 	}
 
