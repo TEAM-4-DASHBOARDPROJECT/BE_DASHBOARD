@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type classRepo struct{
+type classRepo struct {
 	db *gorm.DB
 }
 
@@ -18,12 +18,12 @@ func New(db *gorm.DB) *classRepo {
 	}
 }
 
-func (repo *classRepo) Insert(class entity.ClassEntity)(affectedRow int, err error) {
+func (repo *classRepo) Insert(class entity.ClassEntity) (affectedRow int, err error) {
 	entityModel := data.EntityToModel(class)
 
 	tx := repo.db.Model(&data.Class{}).Create(&entityModel)
 
-	if tx.Error != nil{
+	if tx.Error != nil {
 		return -1, tx.Error
 	}
 
@@ -34,36 +34,36 @@ func (repo *classRepo) Insert(class entity.ClassEntity)(affectedRow int, err err
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *classRepo) Delete(class entity.ClassEntity) (affectedRow int, err error){
+func (repo *classRepo) Delete(class entity.ClassEntity) (affectedRow int, err error) {
 	classModel := data.Class{}
 	classModel.ID = uint(class.ClassID)
 	tx := repo.db.Model(data.Class{}).Delete(&classModel)
 
-	if tx.Error != nil{
+	if tx.Error != nil {
 		return -1, tx.Error
 	}
-	if tx.RowsAffected == 0{
+	if tx.RowsAffected == 0 {
 		return 0, errors.New("failed to delete class")
 	}
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *classRepo) Update (class entity.ClassEntity) (affectedRow int, err error) {
+func (repo *classRepo) Update(class entity.ClassEntity) (affectedRow int, err error) {
 	classModel := data.EntityToModel(class)
 	tx := repo.db.Model(&data.Class{}).Where("id = ?", class.ClassID).Updates(&classModel)
-	if tx.Error != nil{
+	if tx.Error != nil {
 		return -1, tx.Error
 	}
-	if tx.RowsAffected == 0{
+	if tx.RowsAffected == 0 {
 		return 0, errors.New("failed to update data")
 	}
 	return int(tx.RowsAffected), nil
 }
 
-func (repo *classRepo) FindAll() (result []entity.ClassEntity,err error){
+func (repo *classRepo) FindAll() (result []entity.ClassEntity, err error) {
 	classModels := []data.Class{}
-	tx	:= repo.db.Model(&data.Class{})
-	if tx.Error != nil{
+	tx := repo.db.Find(&classModels)
+	if tx.Error != nil {
 		return result, tx.Error
 	}
 
