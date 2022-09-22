@@ -18,8 +18,8 @@ func New(db *gorm.DB) users.DataInterface {
 }
 func (repo *dataUser) GetMyProfile(token int) (users.Core, error) {
 
-	data := User{}
-	tx := repo.db.Preload("Team").First(&data, token).Find(&data).Where("userid = ?", token)
+	var data User
+	tx := repo.db.First(&data, token)
 	if tx.Error != nil {
 		return users.Core{}, tx.Error
 	}
@@ -31,7 +31,7 @@ func (repo *dataUser) SelectAll(page, token int) ([]users.Core, error) {
 
 	limit := 5
 	offset := ((page - 1) * limit)
-	queryParam := repo.db.Limit(limit).Offset(offset).Preload("Team")
+	queryParam := repo.db.Limit(limit).Offset(offset)
 
 	var data []User
 
@@ -79,15 +79,13 @@ func (repo *dataUser) DelData(id int) int {
 	return int(tx.RowsAffected)
 }
 
-func (repo *dataUser) InsertData(input users.Core) (int, error) {
-	UserModel := fromCore(input)
-	tx := repo.db.Create(&UserModel)
+func (repo *dataUser) InsertData(data users.Core) int {
+
+	var dataInsert = fromCore(data)
+	tx := repo.db.Create(&dataInsert)
 	if tx.Error != nil {
-		return 0, tx.Error
-	}
-	if tx.RowsAffected == 0 {
-		return 0, errors.New("failed to insert data")
+		return -1
 	}
 
-	return int(tx.RowsAffected), nil
+	return int(tx.RowsAffected)
 }
