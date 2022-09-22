@@ -26,6 +26,10 @@ import (
 	menteeData "immersiveProject/features/mentee/data"
 	menteeDelivery "immersiveProject/features/mentee/delivery"
 	menteeUsecase "immersiveProject/features/mentee/usecase"
+
+	loghandler "immersiveProject/features/log/delivery"
+	logrepo "immersiveProject/features/log/repository"
+	logusecase "immersiveProject/features/log/usecase"
 )
 
 func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
@@ -49,6 +53,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	menteeUsecaseFactory := menteeUsecase.New(menteeData)
 	menteeDelivery.New(e, menteeUsecaseFactory)
 
+	logRepo := logrepo.New(db)
+	logUsecase := logusecase.New(logRepo)
+	logHandler := loghandler.New(logUsecase)
+
 	/*  Route
 	 */
 
@@ -58,5 +66,8 @@ func InitRoutes(e *echo.Echo, db *gorm.DB, cfg *config.AppConfig) {
 	e.POST("/class", classHandler.Create, middlewares.JWTMiddleware())
 	e.PUT("/class/:id", classHandler.UpdateClass, middlewares.JWTMiddleware())
 	e.DELETE("/class/:id", classHandler.DeleteClass, middlewares.JWTMiddleware())
+
+	e.GET("/log", logHandler.FindLog, middlewares.JWTMiddleware())
+	e.POST("/log", logHandler.Createlog, middlewares.JWTMiddleware())
 
 }

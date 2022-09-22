@@ -21,6 +21,14 @@ func New(log entity.InterfaceLog) *loghandler {
 	}
 }
 
+func (handler *loghandler) FindLog(c echo.Context) error {
+	result, err := handler.LogInterface.FindLog()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
+	}
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("succses get Log", CoreList(result)))
+}
+
 func (handler *loghandler) Createlog(c echo.Context) error {
 	logToken, errToken := middlewares.ExtractToken(c)
 	if logToken == 0 || errToken != nil{
