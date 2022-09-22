@@ -7,12 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 )
-
-const UserImages = "userimages"
-const UserDocuments = "userdocuments"
-const LogsImages = "logsimages"
 const LogsDocuments = "logsdocuments"
-const MenteeImages = "menteeimages"
 const ContentImage = "images"
 const ContentDocuments = "application/pdf"
 
