@@ -18,11 +18,8 @@ type UserCore struct {
 }
 
 type TeamCore struct {
-	ID   uint
-	Name string
-	// Author    string
-	// Publisher string
-	// Page      int
+	ID        uint
+	Name      string
 	CreatedAt time.Time
 	UserID    uint
 	UpdatedAt time.Time
@@ -34,7 +31,7 @@ type ServiceInterface interface {
 	GetById(param, token int) (data UserCore, err error)
 	PostData(data UserCore) (int, error)
 	PutData(param, token int, data UserCore) (int, error)
-	DeleteData(param, token int) (int, error)
+	DeleteData(id int) (int, error)
 }
 
 type DataInterface interface {
@@ -42,5 +39,5 @@ type DataInterface interface {
 	SelectById(param, token int) (data UserCore, err error)
 	CreateData(data UserCore) (int, error)
 	UpdateData(param int, data UserCore) (int, error)
-	DelData(param int) (int, error)
+	DelData(id int) (int, error)
 }
