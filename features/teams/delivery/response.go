@@ -1,17 +1,30 @@
 package delivery
 
-import (
-	"immersiveProject/features/teams"
-)
+import "immersiveProject/features/teams"
 
-type TeamResponse struct {
-	ID   uint
-	Name string
+type Respon struct {
+	Name   string `json:"name" form:"name"`
+	UserID uint   `json:"user_id" form:"user_id"`
 }
 
-func EntityToClassResponse(data teams.Core) TeamResponse {
-	return TeamResponse{
-		ID:   data.ID,
-		Name: data.Name,
+func toRespon(data teams.TeamCore) Respon {
+
+	var res = Respon{
+		Name:   data.Name,
+		UserID: data.UserID,
 	}
+
+	return res
+
+}
+
+func toResponList(data []teams.TeamCore) []Respon {
+
+	var res []Respon
+	for _, v := range data {
+		res = append(res, toRespon(v))
+	}
+
+	return res
+
 }

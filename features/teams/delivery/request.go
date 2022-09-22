@@ -1,15 +1,17 @@
 package delivery
 
-import (
-	"immersiveProject/features/teams"
-)
+import "immersiveProject/features/teams"
 
-type TeamRequest struct {
+type Request struct {
 	Name string `json:"name" form:"name"`
 }
 
-func RequestToEntity(request TeamRequest) teams.Core {
-	return teams.Core{
-		Name: request.Name,
+func toCore(req Request) teams.TeamCore {
+
+	var res = teams.TeamCore{
+		Name: req.Name,
 	}
+
+	return res
+
 }

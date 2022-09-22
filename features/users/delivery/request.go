@@ -2,23 +2,24 @@ package delivery
 
 import "immersiveProject/features/users"
 
-type Request struct {
-	ID       uint   `json:"id" form:"id"`
+type UserReq struct {
 	Name     string `json:"name" form:"name"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
-	Team     string `json:"team" form:"team"`
-	Role     string `json:"role" form:"role"`
 	Status   string `json:"status" form:"status"`
+	Role     string `json:"role" form:"role"`
+	Team     string `json:"team" form:"team"`
 }
 
-func (req *Request) toCoreReq() users.Core {
-	return users.Core{
+func ToCore(req UserReq) users.UserCore {
+
+	return users.UserCore{
 		Name:     req.Name,
 		Email:    req.Email,
 		Password: req.Password,
-		Team:     req.Team,
-		Role:     req.Role,
 		Status:   req.Status,
+		Role:     req.Role,
+		// Team:     req.Team,
 	}
+
 }

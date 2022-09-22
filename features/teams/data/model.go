@@ -2,6 +2,7 @@ package data
 
 import (
 	"immersiveProject/features/teams"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -9,19 +10,46 @@ import (
 type Team struct {
 	gorm.Model
 	UserID uint
-	Name   string
+	Name   string `json:"name" form:"name"`
 }
 
-func ModelToEntity(data Team) teams.Core {
-	return teams.Core{
-		ID:   data.ID,
+type User struct {
+	Email     string `gorm:"primary key"`
+	ID        uint   `gorm:"autoIncrement"`
+	Name      string
+	Password  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
+}
+
+func InsTeam(data teams.TeamCore) Team {
+	userData := Team{
 		Name: data.Name,
 	}
+
+	return userData
 }
 
-func entityToModel(core teams.Core) Team {
-	return Team{
-		UserID: core.UserID,
-		Name:   core.Name,
+func (dataTeam *Team) ToTeamUser() teams.TeamCore {
+
+	dataTeamCore := teams.TeamCore{
+		ID:        dataTeam.ID,
+		UserID:    dataTeam.UserID,
+		Name:      dataTeam.Name,
+		CreatedAt: dataTeam.CreatedAt,
+		UpdatedAt: dataTeam.UpdatedAt,
+		DeletedAt: dataTeam.DeletedAt.Time,
 	}
+
+	return dataTeamCore
+
+}
+
+func toTeamList(data []Team) []teams.TeamCore {
+	var dataCore []teams.TeamCore
+	for i := 0; i < len(data); i++ {
+		dataCore = append(dataCore, data[i].ToTeamUser())
+	}
+	return dataCore
 }
