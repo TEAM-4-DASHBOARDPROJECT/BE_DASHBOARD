@@ -50,14 +50,14 @@ func (repo *classRepo) DeleteData(id int) (row int, err error) {
 
 func (repo *classRepo) UpdateData(id int, class entity.ClassEntity) (row int, err error) {
 	classModel := data.EntityToModel(class)
-	tx := repo.db.Model(&data.Class{}).Where("id = ?", class.ClassID).Updates(&classModel)
+	tx := repo.db.Model(&data.Class{}).Where("id = ?", id).Updates(&classModel)
 	if tx.Error != nil {
 		return -1, tx.Error
 	}
 	if tx.RowsAffected == 0 {
 		return 0, errors.New("failed to update data")
 	}
-	return int(tx.RowsAffected), nil
+	return 1, nil
 }
 
 func (repo *classRepo) FindAll() (result []entity.ClassEntity, err error) {
