@@ -1,36 +1,35 @@
 package delivery
 
 import (
-	// "immersiveProject/config"
 	"immersiveProject/config"
 	"immersiveProject/features/log/entity"
+	"immersiveProject/middlewares"
+	"immersiveProject/utils/helper"
+	// "log"
+	"net/http"
 	"strconv"
 	"time"
 
-	// "log"
-
-	// "immersiveProject/features/users/data"
-	"immersiveProject/middlewares"
-	"immersiveProject/utils/helper"
-	"net/http"
-
-	// "strconv"
-	// "time"
-
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type loghandler struct {
+<<<<<<< HEAD
 	LogInterface entity.InterfaceLog
 	conn         *session.Session
+=======
+	LogInterface 	entity.InterfaceLog
+>>>>>>> 10c35ede65438e68ccdb415dee879cebdc56f634
 }
 
 func New(log entity.InterfaceLog) *loghandler {
-	aws := &session.Session{}
 	return &loghandler{
+<<<<<<< HEAD
 		LogInterface: log,
 		conn:         aws,
+=======
+		LogInterface: 	log,
+>>>>>>> 10c35ede65438e68ccdb415dee879cebdc56f634
 	}
 }
 
@@ -43,7 +42,10 @@ func (handler *loghandler) FindLog(c echo.Context) error {
 }
 
 func (handler *loghandler) Createlog(c echo.Context) error {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 10c35ede65438e68ccdb415dee879cebdc56f634
 	logToken, errToken := middlewares.ExtractToken(c)
 	if logToken == 0 || errToken != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
@@ -86,7 +88,10 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
 	}
 	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 10c35ede65438e68ccdb415dee879cebdc56f634
 }
 
 // var response LogResponse
@@ -130,6 +135,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 // 		}
 // 	}
 
+<<<<<<< HEAD
 // logToken, errToken := middlewares.ExtractToken(c)
 // if logToken == 0 || errToken != nil {
 // 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
@@ -153,3 +159,47 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 // 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
 // }
 // return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Succses", link))
+=======
+	// logToken, errToken := middlewares.ExtractToken(c)
+	// if logToken == 0 || errToken != nil {
+	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
+	// }
+
+	// logs := LogRequest{}
+	// errBind := c.Bind(&logs)
+	// if errBind != nil {
+	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
+	// }
+
+	// fileData, fileInfo, fileErr := c.Request().FormFile("file")
+	// if fileErr == http.ErrMissingFile || fileErr != nil {
+	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get file"))
+	// }
+
+	// fileExtension, errFileExtention := helper.CheckfileExtension(fileInfo.Filename, config.ContentDocuments)
+	// if errFileExtention != nil {
+	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file extension error"))
+	// }
+
+	// errFileSize := helper.CheckFileSize(fileInfo.Size, config.ContentDocuments)
+	// if errFileSize != nil {
+	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
+	// }
+
+	// filename := strconv.Itoa(logToken) + "" + logs.File + time.Now().Format("2006-01-02 15:04:05") + fileExtension
+	// file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
+
+	// if errUploadFile != nil {
+	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload"))
+	// }
+
+	// logsCore := ToCoreRequest(logs)
+	// logsCore.LogID = logToken
+	// logsCore.File = file
+
+	// _, err := handler.LogInterface.CreateLog(logsCore)
+	// if err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
+	// }
+	// return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
+>>>>>>> 10c35ede65438e68ccdb415dee879cebdc56f634
