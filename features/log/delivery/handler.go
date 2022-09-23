@@ -12,21 +12,16 @@ import (
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
 	"net/http"
-
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type loghandler struct {
 	LogInterface 	entity.InterfaceLog
-	conn			*session.Session
 }
 
 func New(log entity.InterfaceLog) *loghandler {
-	aws := &session.Session{}
 	return &loghandler{
 		LogInterface: 	log,
-		conn: 			aws,
 	}
 }
 
@@ -51,9 +46,12 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
 	}
 
-	file, err := c.FormFile("file")
-	if err != nil {
-		log.Println(err)
+
+	filename := strconv.Itoa(logToken) + "" + logs.Feedback + time.Now().Format("2006-01-02 15:04:05") + fileExtension
+	file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
+
+	if errUploadFile != nil {
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload"))
 	}
 	link := helper.DoUpload(handler.conn, *file, file.Filename)
 	logs.File = link
