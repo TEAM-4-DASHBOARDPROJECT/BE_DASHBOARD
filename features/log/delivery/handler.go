@@ -22,15 +22,15 @@ import (
 )
 
 type loghandler struct {
-	LogInterface 	entity.InterfaceLog
-	conn			*session.Session
+	LogInterface entity.InterfaceLog
+	conn         *session.Session
 }
 
 func New(log entity.InterfaceLog) *loghandler {
 	aws := &session.Session{}
 	return &loghandler{
-		LogInterface: 	log,
-		conn: 			aws,
+		LogInterface: log,
+		conn:         aws,
 	}
 }
 
@@ -43,7 +43,7 @@ func (handler *loghandler) FindLog(c echo.Context) error {
 }
 
 func (handler *loghandler) Createlog(c echo.Context) error {
-	
+
 	logToken, errToken := middlewares.ExtractToken(c)
 	if logToken == 0 || errToken != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
@@ -86,10 +86,8 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
 	}
 	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
-	
+
 }
-
-
 
 // var response LogResponse
 // 	var fileType, fileName string
@@ -132,29 +130,26 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 // 		}
 // 	}
 
+// logToken, errToken := middlewares.ExtractToken(c)
+// if logToken == 0 || errToken != nil {
+// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
+// }
+// var logs LogResponse
+// bind := c.Bind(&logs)
 
+// if bind != nil {
+// 	log.Print("fail bind")
+// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
+// }
 
+// file, err := c.FormFile("file")
+// if err != nil {
+// 	log.Println(err)
+// }
+// link := helper.DoUpload(handler.conn, *file, file.Filename)
+// logs.File = link
 
-	// logToken, errToken := middlewares.ExtractToken(c)
-	// if logToken == 0 || errToken != nil {
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
-	// }
-	// var logs LogResponse
-	// bind := c.Bind(&logs)
-
-	// if bind != nil {
-	// 	log.Print("fail bind")
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
-	// }
-
-	// file, err := c.FormFile("file")
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// link := helper.DoUpload(handler.conn, *file, file.Filename)
-	// logs.File = link
-
-	// if err != nil{
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
-	// }
-	// return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Succses", link))
+// if err != nil{
+// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("internal server error"))
+// }
+// return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Succses", link))
