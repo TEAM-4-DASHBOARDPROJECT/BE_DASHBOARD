@@ -59,7 +59,7 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
 	}
 
-	filename := strconv.Itoa(logToken) + "" + logs.File + time.Now().Format("2006-01-02 15:04:05") + fileExtension
+	filename := strconv.FormatInt(time.Now().Unix(), 10)+ fileExtension
 	file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
 
 	if errUploadFile != nil {
