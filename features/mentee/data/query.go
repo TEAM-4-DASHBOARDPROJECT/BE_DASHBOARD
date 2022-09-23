@@ -39,7 +39,7 @@ func (repo *menteeData) SelectMentee(class int, status string, category string) 
 	var dataMentee []Mentee
 	if category != "" {
 		var dataByCate []Mentee
-		txCate := repo.db.Where("education_category = ?", category).Find(&dataByCate)
+		txCate := repo.db.Where("education_category = ?", category).Preload("Class").Find(&dataByCate)
 		if txCate.Error != nil {
 			return nil, txCate.Error
 		}
