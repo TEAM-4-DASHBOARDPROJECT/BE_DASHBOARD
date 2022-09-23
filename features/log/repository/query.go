@@ -12,7 +12,7 @@ type LogRepo struct{
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) (entity.InterfaceLog) {
+func New(db *gorm.DB) entity.InterfaceLog {
 	return &LogRepo {
 		db: db,
 	}
