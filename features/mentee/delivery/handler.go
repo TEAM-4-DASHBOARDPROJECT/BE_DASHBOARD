@@ -56,6 +56,16 @@ func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
+	roleToken, _ := middlewares.ExtractRoleToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
+
+	var id int
+	if roleToken != "superadmin" {
+		if id != idToken {
+			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
+		}
+	}
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
@@ -87,8 +97,8 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 		if id != idToken {
 			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
 		}
-
 	}
+
 	var classID int
 	query := c.QueryParam("class")
 	if query != "" {
