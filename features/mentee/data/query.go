@@ -47,7 +47,7 @@ func (repo *menteeData) SelectMentee(class int, status string, category string) 
 
 	} else if status != "" {
 		var dataByStatus []Mentee
-		txState := repo.db.Where("status = ?", status).Find(&dataByStatus)
+		txState := repo.db.Where("status = ?", status).Preload("Class").Find(&dataByStatus)
 		if txState.Error != nil {
 			return nil, txState.Error
 		}
@@ -56,8 +56,6 @@ func (repo *menteeData) SelectMentee(class int, status string, category string) 
 	} else if class != 0 {
 		var dataByClass []Mentee
 		txClass := repo.db.Where("class_id = ?", class).Preload("Class").Find(&dataByClass)
-		// txClass := repo.db.Model(&Class{}).Select("mentees.id, mentees.fullname, classes.name, mentees.status, mentees.address, mentees.homeaddress, mentees.email, mentees.gender, mentees.telegram, mentees.phone, mentees.emergencyname, mentees.emergencyphone, mentees.emergencystatus, mentees.educationcategory, mentees.educationmajor, mentees.educationgraduate, mentees.class_id").Joins("inner join mentees on mentees.class_id = classes.id").Where("mentees.class_name = ?", class).Scan(&dataByClass)
-		// txClass := repo.db.Joins("Class").Where(&Class{Name: class}).Find(&dataByClass)
 		if txClass.Error != nil {
 			return nil, txClass.Error
 		}
