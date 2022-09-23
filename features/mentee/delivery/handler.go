@@ -119,6 +119,17 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) DeleteMentee(c echo.Context) error {
+	roleToken, _ := middlewares.ExtractRoleToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
+
+	var akses int
+	if roleToken != "superadmin" {
+		if akses != idToken {
+			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
+		}
+
+	}
+
 	id := c.Param("id")
 	idCnv, errId := strconv.Atoi(id)
 	if errId != nil {
