@@ -17,20 +17,17 @@ import (
 	// "strconv"
 	// "time"
 
-	"github.com/aws/aws-sdk-go/aws/session"
+	// "github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type loghandler struct {
 	LogInterface 	entity.InterfaceLog
-	conn			*session.Session
 }
 
 func New(log entity.InterfaceLog) *loghandler {
-	aws := &session.Session{}
 	return &loghandler{
 		LogInterface: 	log,
-		conn: 			aws,
 	}
 }
 
