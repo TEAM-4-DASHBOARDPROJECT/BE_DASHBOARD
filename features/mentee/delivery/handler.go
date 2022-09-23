@@ -26,6 +26,17 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 }
 
 func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
+	roleToken, _ := middlewares.ExtractRoleToken(c)
+	idToken, _ := middlewares.ExtractToken(c)
+
+	var id int
+	if roleToken != "superadmin" {
+		if id != idToken {
+			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
+		}
+
+	}
+
 	var dataRegister MenteeRequest
 	errBind := c.Bind(&dataRegister)
 	if errBind != nil {
