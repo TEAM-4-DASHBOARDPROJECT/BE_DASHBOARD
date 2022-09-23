@@ -6,18 +6,10 @@ import (
 	"immersiveProject/features/log/entity"
 	"strconv"
 	"time"
-
-	// "log"
-
-	// "immersiveProject/features/users/data"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
 	"net/http"
 
-	// "strconv"
-	// "time"
-
-	// "github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
