@@ -26,17 +26,6 @@ func New(e *echo.Echo, usecase mentee.UsecaseInterface) {
 }
 
 func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
-	roleToken, _ := middlewares.ExtractRoleToken(c)
-	idToken, _ := middlewares.ExtractToken(c)
-
-	var id int
-	if roleToken != "superadmin" {
-		if id != idToken {
-			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
-		}
-
-	}
-
 	var dataRegister MenteeRequest
 	errBind := c.Bind(&dataRegister)
 	if errBind != nil {
@@ -56,16 +45,6 @@ func (delivery *MenteeDelivery) PostMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
-	roleToken, _ := middlewares.ExtractRoleToken(c)
-	idToken, _ := middlewares.ExtractToken(c)
-
-	var id int
-	if roleToken != "superadmin" {
-		if id != idToken {
-			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
-		}
-	}
-
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(400, helper.FailedResponseHelper("param must be number"))
@@ -89,16 +68,6 @@ func (delivery *MenteeDelivery) PutMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
-	roleToken, _ := middlewares.ExtractRoleToken(c)
-	idToken, _ := middlewares.ExtractToken(c)
-
-	var id int
-	if roleToken != "superadmin" {
-		if id != idToken {
-			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
-		}
-	}
-
 	var classID int
 	query := c.QueryParam("class")
 	if query != "" {
@@ -129,17 +98,6 @@ func (delivery *MenteeDelivery) GetMentee(c echo.Context) error {
 }
 
 func (delivery *MenteeDelivery) DeleteMentee(c echo.Context) error {
-	roleToken, _ := middlewares.ExtractRoleToken(c)
-	idToken, _ := middlewares.ExtractToken(c)
-
-	var akses int
-	if roleToken != "superadmin" {
-		if akses != idToken {
-			return c.JSON(400, helper.FailedResponseHelper("Unauthorized"))
-		}
-
-	}
-
 	id := c.Param("id")
 	idCnv, errId := strconv.Atoi(id)
 	if errId != nil {
