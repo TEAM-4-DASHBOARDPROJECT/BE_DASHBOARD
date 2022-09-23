@@ -5,6 +5,7 @@ import (
 	"immersiveProject/features/log/entity"
 	"immersiveProject/middlewares"
 	"immersiveProject/utils/helper"
+
 	// "log"
 	"net/http"
 	"strconv"
@@ -14,12 +15,12 @@ import (
 )
 
 type loghandler struct {
-	LogInterface 	entity.InterfaceLog
+	LogInterface entity.InterfaceLog
 }
 
 func New(log entity.InterfaceLog) *loghandler {
 	return &loghandler{
-		LogInterface: 	log,
+		LogInterface: log,
 	}
 }
 
@@ -75,89 +76,3 @@ func (handler *loghandler) Createlog(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
 }
-
-
-
-// var response LogResponse
-// 	var fileType, fileName string
-// 	var fileSize int64
-// 	isSuccses := true
-// 	file, err := c.FormFile("file")
-
-// 	if err != nil {
-// 		isSuccses = false
-// 	} else{
-// 		src, err := file.Open()
-// 		if err != nil {
-// 			isSuccses = false
-// 		} else {
-// 			fileByte, _ := ioutil.ReadAll(src)
-// 			fileType = http.DetectContentType(fileByte)
-
-// 			if fileType == "application/pdf"{
-// 				fileName = strconv.FormatInt(time.Now().Unix(), 10)+".pdf"
-// 			} else if fileType == "jpg"{
-// 				fileName = strconv.FormatInt(time.Now().Unix(), 10)+".jpg"
-// 			} else {
-// 				fileName = strconv.FormatInt(time.Now().Unix(), 10)+".jpeg"
-// 			}
-
-// 			err = ioutil.WriteFile(fileName, fileByte, 0777)
-// 			if err != nil{
-// 				isSuccses = false
-// 			} else {
-// 				fileSize = file.Size
-// 			}
-// 		}
-// 	}
-
-// 	if isSuccses {
-// 		return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("Succses upload file", file))
-// 	} else {
-// 		response = LogResponse{
-// 			Message: "Failed upload file",
-// 		}
-// 	}
-
-	// logToken, errToken := middlewares.ExtractToken(c)
-	// if logToken == 0 || errToken != nil {
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert data"))
-	// }
-
-	// logs := LogRequest{}
-	// errBind := c.Bind(&logs)
-	// if errBind != nil {
-	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("error bind log"))
-	// }
-
-	// fileData, fileInfo, fileErr := c.Request().FormFile("file")
-	// if fileErr == http.ErrMissingFile || fileErr != nil {
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to get file"))
-	// }
-
-	// fileExtension, errFileExtention := helper.CheckfileExtension(fileInfo.Filename, config.ContentDocuments)
-	// if errFileExtention != nil {
-	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file extension error"))
-	// }
-
-	// errFileSize := helper.CheckFileSize(fileInfo.Size, config.ContentDocuments)
-	// if errFileSize != nil {
-	// 	return c.JSON(http.StatusBadRequest, helper.FailedResponseHelper("file size error"))
-	// }
-
-	// filename := strconv.Itoa(logToken) + "" + logs.File + time.Now().Format("2006-01-02 15:04:05") + fileExtension
-	// file, errUploadFile := helper.UploadPDFToS3(config.ContentDocuments, filename, config.ContentDocuments, fileData)
-
-	// if errUploadFile != nil {
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed to upload"))
-	// }
-
-	// logsCore := ToCoreRequest(logs)
-	// logsCore.LogID = logToken
-	// logsCore.File = file
-
-	// _, err := handler.LogInterface.CreateLog(logsCore)
-	// if err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, helper.FailedResponseHelper("failed insert logs"))
-	// }
-	// return c.JSON(http.StatusOK, helper.SuccessResponseHelper("insert logs succses"))
